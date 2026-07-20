@@ -1,0 +1,13 @@
+# requirements.txt
+
+hdfs
+numpy 
+pandas 
+matplotlib
+pylint
+pyspark
+scikit-learn
+statsmodels
+sphinx_rtd_theme
+torch
+torchvision
