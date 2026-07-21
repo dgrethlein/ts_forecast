@@ -1025,6 +1025,24 @@ files = [
 ]
 
 [[package]]
+name = "pyan3"
+version = "2.6.2"
+description = "Generate approximate call graphs for Python programs"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "pyan3-2.6.2-py3-none-any.whl", hash = "sha256:51b3f124286398f983e67bb1569074ca98047e51c420e9055376c56c9232c41e"},
+    {file = "pyan3-2.6.2.tar.gz", hash = "sha256:ecb63d32ea28ec10caf22aad11310022a341c9bf5e8b9301e9a64ed3fe2edc91"},
+]
+
+[package.dependencies]
+jinja2 = "*"
+
+[package.extras]
+sphinx = ["docutils", "sphinx"]
+
+[[package]]
 name = "pygments"
 version = "2.20.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -1590,4 +1608,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "5274bf023830efe1ce6f832b61cfa0c12d05f280f817803af5d60239fcf81eb4"
+content-hash = "79f59388bd9ac273cec7f6665f85efdfb65c510d5fe0b71eb5dc242c06e9aec1"

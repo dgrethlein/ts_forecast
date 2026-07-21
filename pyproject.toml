@@ -15,7 +15,8 @@ dependencies = [
     "pylint (>=4.0.6,<5.0.0)",
     "sphinx-rtd-theme (>=3.1.0,<4.0.0)",
     "scikit-learn (>=1.6.0,<2.0.0)",
-    "sktime (>=1.0.1,<2.0.0)"
+    "sktime (>=1.0.1,<2.0.0)",
+    "pyan3 (>=2.6.2,<3.0.0)"
 ]
 package-mode = false
 
