@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-:mod:`Time Series Plotting Utility<src.utils.plot_ts>` module.
+:mod:`Time Series Plotting<src.plot.plot_ts>` module.
 
 
 Module Description
@@ -26,7 +26,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from .misc import dbg, err
+from ..pre_process.split_ts_df import split_ts_df_into_train_and_test
+
+from ..utils.misc import dbg, err
 
 
 #==============================================================================
@@ -81,6 +83,49 @@ def plot_ts_df_on_ax(data_df : pd.DataFrame,
 
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't plot time series DataFrame(s) on matplotlib Axes!\n")
+        traceback.print_exc()
+
+
+def plot_train_and_test_df_on_ax(data_df : pd.DataFrame,
+                                 holdout : float,
+                                 verbose : bool = False):
+    """Summary
+
+    Args:
+        data_df (pd.DataFrame): Description
+        holdout (float): Description
+        verbose (bool, optional): Description
+    """
+    try:
+        # Sets up a plotting Figure and Axes.
+        fig, ax = setup_ts_df_plot(verbose=verbose)
+
+        # Splits the provided time series DataFrame into train and test sets.
+        train_df, test_df = split_ts_df_into_train_and_test(data_df=data_df,
+                                                            holdout=holdout,
+                                                            verbose=verbose)
+
+
+        ax.plot(np.array(list(range(len(train_df)))),
+                train_df["kwh_electricity_consumed"].values,
+                alpha=0.5,
+                label="Training data",
+                c="k")
+
+        ax.plot(np.array(list(range(len(train_df), len(data_df)))),
+                test_df["kwh_electricity_consumed"].values,
+                alpha=0.5,
+                label="Testing data",
+                c="g")
+
+        ax.legend()
+
+        fig.tight_layout()
+        plt.show()
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't plot time series train and test "
+              + "DataFrame(s) on matplotlib Axes!\n")
         traceback.print_exc()
 
 
