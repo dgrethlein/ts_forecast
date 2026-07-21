@@ -17,8 +17,6 @@ Module Contents
 """
 
 
-import argparse
-
 from pathlib import Path
 
 import traceback
@@ -29,6 +27,8 @@ import pandas as pd
 
 from sklearn.model_selection import KFold
 from sktime.datasets import load_tsf_to_dataframe
+
+from .utils.args import parse_run_ts_forecast_args
 
 from .utils.misc import dbg, err
 from .utils.misc import is_nonneg_finite_int
@@ -86,12 +86,12 @@ def load_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.Dat
 
 
 #==============================================================================
-#       SPLIT TIME SERIES DATASET FOR K-FOLD CROSS-VALIDATION FUNCTION(s)
+#       SPLIT TIME SERIES DATASET FUNCTION(s)
 #==============================================================================
-def get_dataset_train_test_splits(cv_random_seed : int,
-                                  data_dfs       : List[pd.DataFrame],
-                                  num_folds      : int,
-                                  verbose        : bool = False) -> Dict:
+def get_dataset_train_test_cv_splits(cv_random_seed : int,
+                                     data_dfs       : List[pd.DataFrame],
+                                     num_cv_folds      : int,
+                                     verbose        : bool = False) -> Dict:
     """Summary
 
     Args:
@@ -135,6 +135,37 @@ def get_dataset_train_test_splits(cv_random_seed : int,
     return splits_dict
 
 
+
+def split_ts_df_into_train_and_test(data_df : pd.DataFrame,
+                                    holdout : float,
+                                    verbose : bool = False) -> Tuple[pd.DataFrame,pd.DataFrame]:
+    """Summary
+
+    Args:
+        data_df (pd.DataFrame): Description
+        holdout (float): Description
+        verbose (bool, optional): Description
+    """
+    train_data_df = None
+    test_data_df = None
+
+    try:
+        train_data_df = data_df.iloc[:int(len(data_df) * (1.0 - holdout))].reset_index(drop=True)
+        test_data_df = data_df.iloc[int(len(data_df) * (1.0 - holdout)):].reset_index(drop=True)
+
+        if verbose:
+            print(f"\n// {dbg()}  Split time series sample of length "
+                  + f"{len(data_df)} frames into train and test data!")
+            print(f"// {dbg()}    # training frames := {len(train_data_df)}")
+            print(f"// {dbg()}    # testing frames  := {len(test_data_df)}")
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't split time series DataFrame into train and test data!\n")
+        traceback.print_exc()
+
+    return (train_data_df, test_data_df)
+
+
 #==============================================================================
 #       SCRIPT ENTRY POINT
 #==============================================================================
@@ -144,13 +175,19 @@ if __name__ == "__main__":
 
     dfs, names = load_dataset_df_into_series_dfs(verbose=True)
 
-    for series_idx, series_df in enumerate(dfs[:3]):
-        plot_ts_df_on_ax(data_df=series_df,
-                         verbose=True)
+    # for series_idx, series_df in enumerate(dfs[:3]):
+    #     plot_ts_df_on_ax(data_df=series_df,
+    #                      verbose=True)
 
-    # get_dataset_train_test_splits(cv_random_seed=41,
-    #                               data_dfs=series_dfs,
-    #                               num_folds=5,
-    #                               verbose=True)
+    pargs = parse_run_ts_forecast_args()
+
+    split_ts_df_into_train_and_test(data_df=dfs[0],
+                                    holdout=pargs["holdout_percentage"],
+                                    verbose=pargs["verbose"])
+
+    # get_dataset_train_test_cv_splits(cv_random_seed=41,
+    #                                  data_dfs=series_dfs,
+    #                                  num_cv_folds=5,
+    #                                  verbose=True)
 
     print(f"\n// {dbg()}  All done here, nothing to see!\n")
