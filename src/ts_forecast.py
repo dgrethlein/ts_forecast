@@ -19,15 +19,13 @@ Module Contents
 
 import argparse
 
-import numpy as np
-import pandas as pd
-
 from pathlib import Path
 
 import traceback
 from typing import Dict, List, Tuple
 
-import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 from sklearn.model_selection import KFold
 from sktime.datasets import load_tsf_to_dataframe
@@ -144,9 +142,9 @@ if __name__ == "__main__":
 
     print(f"\n// {dbg()}  Running File['{__file__}'] as __main__!\n")
 
-    series_dfs, series_names = load_dataset_df_into_series_dfs(verbose=True)
+    dfs, names = load_dataset_df_into_series_dfs(verbose=True)
 
-    for series_idx, series_df in enumerate(series_dfs[:3]):
+    for series_idx, series_df in enumerate(dfs[:3]):
         plot_ts_df_on_ax(data_df=series_df,
                          verbose=True)
 

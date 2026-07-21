@@ -48,7 +48,7 @@ def setup_ts_df_plot(verbose : bool = False) -> Tuple[plt.Figure, plt.Axes]:
         plot_ax.set_xlabel("Time-steps (Hourly)")
         plot_ax.set_ylabel("Electricity consumption (kwh)")
 
-        plot_fig.suptitle(f"Hourly electricity consumption (kwh) for from 2011 to 2014.")
+        plot_fig.suptitle("Hourly electricity consumption (kwh) for from 2011 to 2014.")
 
         if verbose:
             print(f"\n// {dbg()}  Successfully set up matplotlib plot!\n")
