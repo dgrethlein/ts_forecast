@@ -26,8 +26,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from statsmodels.graphics.tsaplots import plot_acf
-
 from ..pre_process.split_ts_df import split_ts_df_into_train_and_test
 
 from ..pre_process.transform_ts_df import yeo_johnson_transform

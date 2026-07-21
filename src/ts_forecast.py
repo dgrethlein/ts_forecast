@@ -24,6 +24,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from statsmodels.graphics.tsaplots import plot_acf
+
 from .plot.plot_ts import plot_train_and_test_dfs
 from .plot.plot_ts import plot_yj_transformed_train_and_test_dfs
 
@@ -50,7 +52,7 @@ def run_ts_forecast():
         dfs, names = load_dataset_df_into_series_dfs(verbose=True)
 
         # Iterates over each time series sample individually.
-        for series_idx, series_df in enumerate(dfs[:3]):
+        for series_idx, series_df in enumerate(dfs[30:33]):
 
             # Splits the time series sample into train and test sets.
             train_df, test_df = split_ts_df_into_train_and_test(data_df=series_df,
@@ -61,6 +63,9 @@ def run_ts_forecast():
             _ = plot_train_and_test_dfs(data_df=series_df,
                                         holdout=pargs["holdout_percentage"],
                                         verbose=pargs["verbose"])
+
+            _ = plot_acf(train_df,
+                         lags=[3, 6, 12, 24, 168, 240, 744, 2160, 4320, 8760])
 
             # Plots the Yeo-Johnson transformed time series data.
             _ = plot_yj_transformed_train_and_test_dfs(data_df=series_df,
@@ -73,7 +78,6 @@ def run_ts_forecast():
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't run time series forecasting!\n")
         traceback.print_exc()
-
 
 
 #==============================================================================
