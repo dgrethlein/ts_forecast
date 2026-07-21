@@ -9,14 +9,16 @@ license = "Apache 2.0"
 readme = "README.md"
 requires-python = ">=3.12,<3.14"
 dependencies = [
-    "numpy (<2.0.0)",
+    "numpy (<2.4.0)",
     "pandas (>=2.0.3,<4.0.0)",
     "matplotlib (>=3.11.1,<4.0.0)",
     "pylint (>=4.0.6,<5.0.0)",
     "sphinx-rtd-theme (>=3.1.0,<4.0.0)",
     "scikit-learn (>=1.6.0,<2.0.0)",
     "sktime (>=1.0.1,<2.0.0)",
-    "pyan3 (>=2.6.2,<3.0.0)"
+    "pyan3 (>=2.6.2,<3.0.0)",
+    "statsmodels (>=0.14.6,<0.15.0)",
+    "scipy (>=1.18.0,<2.0.0)"
 ]
 package-mode = false
 

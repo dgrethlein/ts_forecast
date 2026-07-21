@@ -23,10 +23,14 @@ import traceback
 import numpy as np
 import pandas as pd
 
-from .plot.plot_ts import plot_train_and_test_df_on_ax
+from .plot.plot_ts import plot_train_and_test_dfs_on_ax
+from .plot.plot_ts import plot_yj_transformed_train_and_test_dfs_on_ax
 
 from .pre_process.split_ts_df import load_dataset_df_into_series_dfs
 from .pre_process.split_ts_df import split_ts_df_into_train_and_test
+
+from .pre_process.transform_ts_df import box_cox_transform
+from .pre_process.transform_ts_df import yeo_johnson_transform
 
 from .utils.args import parse_run_ts_forecast_args
 
@@ -51,13 +55,25 @@ def run_ts_forecast():
                                                                 verbose=pargs["verbose"])
 
             # Plots the split time series data.
-            plot_train_and_test_df_on_ax(data_df=series_df,
-                                         holdout=pargs["holdout_percentage"],
-                                         verbose=pargs["verbose"])
+            plot_fig, plot_ax = plot_train_and_test_dfs_on_ax(data_df=series_df,
+                                                              holdout=pargs["holdout_percentage"],
+                                                              verbose=pargs["verbose"])
+
+            # Plots the Yeo-Johnson transformed time series data.
+            yj_plot_fig, yj_plot_ax = plot_yj_transformed_train_and_test_dfs_on_ax(data_df=series_df,
+                                                                                   holdout=pargs["holdout_percentage"],
+                                                                                   verbose=pargs["verbose"])
+
+            # transformed_df, yj_transformer = yeo_johnson_transform(data_df=train_df,
+            #                                                        verbose=pargs["verbose"])
+
+
 
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't run time series forecasting!\n")
         traceback.print_exc()
+
+
 
 
 #==============================================================================

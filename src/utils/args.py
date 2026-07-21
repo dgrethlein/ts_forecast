@@ -37,12 +37,15 @@ def get_ts_forecast_args_parser() -> argparse.ArgumentParser:
     args_parser = None
 
     try:
+        # Command line argument parser for running python modules directly from command line.
         args_parser = argparse.ArgumentParser(description=("Pipeline that will "
                                                            + "train and test time series "
                                                            + "forecasting models using "
                                                            + "electricity consumption data "
                                                            + "sampled hourly from 2011 to 2014."))
 
+        # Adds command line arguments to anticipate to ArgumentParser.
+        add_forecast_horizon_arg_to_parser(parser=args_parser)
         add_holdout_percentage_arg_to_parser(parser=args_parser)
         add_num_cv_folds_arg_to_parser(parser=args_parser)
         add_verbose_arg_to_parser(parser=args_parser)
@@ -53,6 +56,26 @@ def get_ts_forecast_args_parser() -> argparse.ArgumentParser:
 
     return args_parser
 
+
+def add_forecast_horizon_arg_to_parser(parser : argparse.ArgumentParser):
+    """Summary
+
+    Args:
+        parser (argparse.ArgumentParser): Description
+    """
+    try:
+        parser.add_argument("--forecast_horizon",
+                            default=240,
+                            type=int,
+                            required=False,
+                            help=("The number of time-steps into the future for "
+                                  + "time series forecasting models to predict "
+                                  + "the future values of energy consumption. "
+                                  + "Default is ``240`` (10 days sampled hourly)."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add `forecast_horizon` arg to ArgumentParser!\n")
+        traceback.print_exc()
 
 
 def add_holdout_percentage_arg_to_parser(parser : argparse.ArgumentParser):
