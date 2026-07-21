@@ -25,17 +25,23 @@ import pandas as pd
 from pathlib import Path
 
 import traceback
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 
+from sklearn.model_selection import KFold
 from sktime.datasets import load_tsf_to_dataframe
 
 from .utils.misc import dbg, err
+from .utils.misc import is_nonneg_finite_int
+
+from .utils.plot_ts import plot_ts_df_on_ax
 
 
-
-def split_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.DataFrame],List[str]]:
+#==============================================================================
+#       LOAD TIME SERIES DATASET FROM (.tsf) FILE FUNCTION(s)
+#==============================================================================
+def load_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.DataFrame],List[str]]:
     """Summary
 
     Returns:
@@ -48,28 +54,30 @@ def split_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.Da
     series_names = []
 
     try:
+        # Load the dataset (.tsf) file into a MultiIndex DataFrame
         data_path = Path("data/electricity_hourly_dataset.tsf")
-
-        # Load the file into a MultiIndex DataFrame
         data_df, metadata = load_tsf_to_dataframe(full_file_path_and_name=data_path,
                                                   replace_missing_vals_with="NaN",
                                                   value_column_name="kwh_electricity_consumed")
         if verbose:
             print(f"\n// {dbg()}  Dataset metadata := {metadata}\n")
 
-        # Iterates over the 322 time series samples in the dataset.
+        # Iterates over the 321 time series samples in the dataset.
         for sample_idx in range(1,322):
             sample_name = f"T{sample_idx}"
 
-            # Splits the time series sampels by name into individual pandas DataFrame(s).
+            # Splits the time series samples by name into individual pandas DataFrame(s).
             sample_df = data_df.loc[sample_name].reset_index(drop=True)
 
             if verbose:
-                print(f"Sample['{sample_name}'] shape := {sample_df.shape}")
+                print(f"// {dbg()}  Sample['{sample_name}'] shape := {sample_df.shape}")
 
             series_dfs.append(sample_df)
             series_names.append(sample_name)
 
+        if verbose:
+            print(f"\n// {dbg()}  Loaded (N={len(series_dfs)}) named "
+                  + "time series samples from file!")
 
     except (AttributeError, FileNotFoundError, IOError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't split dataset pandas DataFrame into individual "
@@ -80,12 +88,71 @@ def split_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.Da
 
 
 #==============================================================================
+#       SPLIT TIME SERIES DATASET FOR K-FOLD CROSS-VALIDATION FUNCTION(s)
+#==============================================================================
+def get_dataset_train_test_splits(cv_random_seed : int,
+                                  data_dfs       : List[pd.DataFrame],
+                                  num_folds      : int,
+                                  verbose        : bool = False) -> Dict:
+    """Summary
+
+    Args:
+        cv_random_seed (int): Description
+        data_dfs (List[pd.DataFrame]): Description
+        num_folds (int): Description
+        verbose (bool, optional): Description
+
+    Returns:
+        Dict: Description
+    """
+    splits_dict = {}
+
+    try:
+        # If provided arguments were valid, generate K splits of a dataset.
+        if is_nonneg_finite_int(num_folds) and is_nonneg_finite_int(cv_random_seed):
+            kf = KFold(n_splits=num_folds,
+                       shuffle=True,
+                       random_state=int(cv_random_seed))
+
+            if verbose:
+                print(f"\n// {dbg()}  Splitting the dataset of (N={len(data_dfs)}) "
+                      + f"time series samples into K={num_folds} splits for "
+                      + "K-fold cross-validation!")
+                print(f"// {dbg()}--------------------------------------------------------------")
+
+            for split_idx, (train_idx, test_idx) in enumerate(kf.split(data_dfs)):
+                splits_dict[f"fold_{split_idx}"] = {"train_idx" : list(train_idx),
+                                                    "test_idx"  : list(test_idx)}
+
+                if verbose:
+                    print(f"\n// {dbg()}  K={num_folds} cross-validation fold[{split_idx}]")
+                    print(f"// {dbg()}    # train_idx := {len(train_idx)}")
+                    print(f"// {dbg()}    # test_idx  := {len(test_idx)}")
+
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't get the train and test splits for dataset!\n")
+        traceback.print_exc()
+
+    return splits_dict
+
+
+#==============================================================================
 #       SCRIPT ENTRY POINT
 #==============================================================================
 if __name__ == "__main__":
 
     print(f"\n// {dbg()}  Running File['{__file__}'] as __main__!\n")
 
-    series_dfs, series_names = split_dataset_df_into_series_dfs(verbose=True)
+    series_dfs, series_names = load_dataset_df_into_series_dfs(verbose=True)
+
+    for series_idx, series_df in enumerate(series_dfs[:3]):
+        plot_ts_df_on_ax(data_df=series_df,
+                         verbose=True)
+
+    # get_dataset_train_test_splits(cv_random_seed=41,
+    #                               data_dfs=series_dfs,
+    #                               num_folds=5,
+    #                               verbose=True)
 
     print(f"\n// {dbg()}  All done here, nothing to see!\n")

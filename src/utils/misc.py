@@ -34,6 +34,10 @@ Attributes:
 
 import datetime
 
+from typing import Generic
+
+import numpy as np
+
 
 #==============================================================================
 #       ANSI ESCAPE SEQUENCE(s) FOR STDOUT FORMATTING CONSTANT(s)
@@ -259,3 +263,125 @@ def err(show_date : bool = False) -> str:
         err_str += f" {header_str(underline_str(datetime.datetime.now().strftime('%a %b %d')))}"
 
     return err_str + "]"
+
+
+#==============================================================================
+#       EVALUATING TYPE-CAST ATTEMPT LEGITIMACY FUNCTION(s)
+#==============================================================================
+def repr_a_float(value : Generic) -> bool:
+    """Checks to see if the argument `value` is an object than can be cast to
+    a :class:`float` without an error.
+
+    Args:
+        value (Generic): Value that will attempt a type-cast to a :class:`float`.
+
+    Returns:
+        bool: Boolean indicating whether provided value can be type-cast to
+        a: class:`float` or not.
+    """
+    try:
+        float(value)
+        return True
+
+    except (ValueError, TypeError):
+        return False
+
+
+#==============================================================================
+#       REUSABLE VALUE TESTING FUNCTION(s)
+#==============================================================================
+def is_finite_float(value : Generic) -> bool:
+    """Checks whether the provided value is a finite floating point number.
+
+    Args:
+        value (Generic): The value to be inspected.
+
+    Returns:
+        bool: Boolean indicating whether the provided value was a finite
+            floating point number or not.
+    """
+    finite_float = False
+
+    try:
+        finite_float = (isinstance(value, float) and np.isfinite(value))
+
+    except (AttributeError, TypeError, ValueError):
+        pass
+
+    return finite_float
+
+
+def is_finite_int(value : Generic) -> bool:
+    """Checks whether the provided value is a finite integer.
+
+    Args:
+        value (Generic): The value to be inspected.
+
+    Returns:
+        bool: Boolean indicating whether the provided value was a finite
+            integer or not.
+    """
+    finite_int = False
+
+    try:
+        finite_int = (isinstance(value, int) and np.isfinite(value))
+
+    except(AttributeError, TypeError, ValueError):
+        pass
+
+    return finite_int
+
+
+def is_nonneg_finite_float(value : Generic) -> bool:
+    """Checks whether the provided value is a non-negative finite floating point number.
+
+    Args:
+        value (Generic): The value to be inspected.
+
+    Returns:
+        bool: Boolean indicating whether the provided value was a
+            non-negative and finite floating pointing number or not.
+    """
+    is_nonneg_finite = False
+
+    try:
+        is_nonneg_finite = (is_finite_float(value) and value >= 0.0)
+
+    except (AttributeError, TypeError, ValueError):
+        pass
+
+    return is_nonneg_finite
+
+
+def is_nonneg_finite_int(value : Generic) -> bool:
+    """Checks whether the provided value is a non-negative finite integer.
+
+    Args:
+        value (Generic): The value to be inspected.
+
+    Returns:
+        bool: Boolean indicating whether the provided value was a
+            non-negative integer or not.
+    """
+    is_nonneg_finite = False
+
+    try:
+        is_nonneg_finite = (is_finite_int(value) and value >= 0)
+
+    except (AttributeError, TypeError, ValueError):
+        pass
+
+    return is_nonneg_finite
+
+
+def is_non_empty_str(value : Generic) -> bool:
+    """Checks whether the provided value is a non-empty string.
+
+    Args:
+        value (Generic): The value to be inspected.
+
+    Returns:
+        bool: Boolean indicating whether the provided value was a
+            non-empty string or not.
+    """
+    return (isinstance(value, str) and len(value) > 0)

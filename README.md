@@ -1,2 +1,2 @@
-# AEMO_windfarms_forecasting
-Building time series forecasting models on the AEMO windfarms time series data
+# Forecasting kwh of electricity consumed
+Building time series forecasting models on the https://zenodo.org/records/4656140 time series data
