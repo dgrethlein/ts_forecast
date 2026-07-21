@@ -1,0 +1,36 @@
+[project]
+name = "ts-forecast"
+version = "0.1.0"
+description = "Ad hoc time series forecasting git repo"
+authors = [
+    {name = "David Grethlein",email = "12dgrethlein@gmail.com"}
+]
+license = "Apache 2.0"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "numpy (<2.0.0)",
+    "pandas (>=3.0.3,<4.0.0)",
+    "matplotlib (>=3.11.1,<4.0.0)",
+    "pylint (>=4.0.6,<5.0.0)",
+    "sphinx-rtd-theme (>=3.1.0,<4.0.0)",
+    "scikit-learn (>=1.9.0,<2.0.0)"
+]
+package-mode = false
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "pytorch_cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "explicit"
+

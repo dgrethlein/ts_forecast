@@ -4,10 +4,10 @@ hdfs
 numpy 
 pandas 
 matplotlib
+mlflow
 pylint
 pyspark
 scikit-learn
 statsmodels
 sphinx_rtd_theme
 torch
-torchvision
