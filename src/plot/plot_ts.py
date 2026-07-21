@@ -31,9 +31,11 @@ from statsmodels.graphics.tsaplots import plot_acf
 from ..pre_process.split_ts_df import split_ts_df_into_train_and_test
 
 from ..pre_process.transform_ts_df import yeo_johnson_transform
+from ..pre_process.transform_ts_df import difference_transform
 
 from ..utils.misc import dbg, err
 from ..utils.misc import is_non_empty_str
+
 
 #==============================================================================
 #       TIME SERIES PLOTTING FUNCTION(s)
@@ -65,7 +67,7 @@ def setup_ts_df_plot(ax_x_label : str = None,
 
         # Ensures a valid plot title is used.
         if plot_title is None or not is_non_empty_str(plot_title):
-            plot_title = "Hourly electricity consumption (kwh) for from 2011 to 2014."
+            plot_title = "Hourly electricity consumption (kwh) from 2011 to 2014."
 
         # Apply labeling and title.
         plot_ax.set_xlabel(ax_x_label)
@@ -184,10 +186,7 @@ def plot_train_and_test_dfs(data_df : pd.DataFrame,
                               data_df=train_df,
                               verbose=verbose)
 
-
-
         ax.legend()
-
         fig.tight_layout()
 
     except (AttributeError, IndexError, KeyError, TypeError, ValueError):
@@ -232,7 +231,7 @@ def plot_yj_transformed_train_and_test_dfs(data_df : pd.DataFrame,
                                                + "[Y-J Transformed "
                                                + f"(lambda = {yj_lambda:.3f})]"),
                                    plot_title=("Hourly electricity consumption (kwh) "
-                                               + "for from 2011 to 2014 "
+                                               + "from 2011 to 2014 "
                                                + "[Yeo-Johnson Transformed "
                                                + f"(lambda = {yj_lambda:.3f})]."),
                                    verbose=verbose)
@@ -257,15 +256,24 @@ def plot_yj_transformed_train_and_test_dfs(data_df : pd.DataFrame,
                               verbose=verbose)
 
         ax.legend()
-
         fig.tight_layout()
+
+
+        fig2, ax2 = plt.subplots(nrows=1,
+                                 ncols=2)
+
+        train_df["kwh_electricity_consumed"].plot.hist(ax=ax2[0], bins=10)
+        transf_train_df["kwh_electricity_consumed"].plot.hist(ax=ax2[1], bins=10)
+
+        ax2[0].set_title("Histogram of training data")
+        ax2[1].set_title(f"Histogram of [Y-J Transformed training data (lambda = {yj_lambda:.3f})]")
 
     except (AttributeError, IndexError, KeyError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't plot the Yeo-Johnson transformed train and test "
               + "DataFrame(s) on matplotlib Axes!\n")
         traceback.print_exc()
 
-    return (fig, ax)
+    return (fig, ax, fig2, ax2)
 
 
 #==============================================================================

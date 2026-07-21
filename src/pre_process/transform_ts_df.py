@@ -104,7 +104,7 @@ def difference_transform(data_df : pd.DataFrame,
 
     try:
         if is_nonneg_finite_int(period):
-            transformed_df = data_df.diff(period=period)
+            transformed_df = data_df.diff(periods=period)
 
             if verbose:
                 print(f"\n// {dbg()}  Applied differencing (period = {period} frames) on "

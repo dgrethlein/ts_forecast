@@ -58,14 +58,14 @@ def run_ts_forecast():
                                                                 verbose=pargs["verbose"])
 
             # Plots the split time series data.
-            plot_fig, plot_ax = plot_train_and_test_dfs(data_df=series_df,
-                                                        holdout=pargs["holdout_percentage"],
-                                                        verbose=pargs["verbose"])
+            _ = plot_train_and_test_dfs(data_df=series_df,
+                                        holdout=pargs["holdout_percentage"],
+                                        verbose=pargs["verbose"])
 
             # Plots the Yeo-Johnson transformed time series data.
-            yj_plot_fig, yj_plot_ax = plot_yj_transformed_train_and_test_dfs(data_df=series_df,
-                                                                             holdout=pargs["holdout_percentage"],
-                                                                             verbose=pargs["verbose"])
+            _ = plot_yj_transformed_train_and_test_dfs(data_df=series_df,
+                                                       holdout=pargs["holdout_percentage"],
+                                                       verbose=pargs["verbose"])
 
             plt.show()
 
@@ -73,7 +73,6 @@ def run_ts_forecast():
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't run time series forecasting!\n")
         traceback.print_exc()
-
 
 
 
