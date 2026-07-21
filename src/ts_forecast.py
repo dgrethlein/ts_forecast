@@ -24,8 +24,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from .plot.plot_ts import plot_train_and_test_dfs_on_ax
-from .plot.plot_ts import plot_yj_transformed_train_and_test_dfs_on_ax
+from .plot.plot_ts import plot_train_and_test_dfs
+from .plot.plot_ts import plot_yj_transformed_train_and_test_dfs
 
 from .pre_process.split_ts_df import load_dataset_df_into_series_dfs
 from .pre_process.split_ts_df import split_ts_df_into_train_and_test
@@ -40,7 +40,8 @@ from .utils.misc import dbg, err
 
 
 def run_ts_forecast():
-
+    """Summary
+    """
     try:
         # Parse command line arguments.
         pargs = parse_run_ts_forecast_args()
@@ -57,14 +58,14 @@ def run_ts_forecast():
                                                                 verbose=pargs["verbose"])
 
             # Plots the split time series data.
-            plot_fig, plot_ax = plot_train_and_test_dfs_on_ax(data_df=series_df,
-                                                              holdout=pargs["holdout_percentage"],
-                                                              verbose=pargs["verbose"])
+            plot_fig, plot_ax = plot_train_and_test_dfs(data_df=series_df,
+                                                        holdout=pargs["holdout_percentage"],
+                                                        verbose=pargs["verbose"])
 
             # Plots the Yeo-Johnson transformed time series data.
-            yj_plot_fig, yj_plot_ax = plot_yj_transformed_train_and_test_dfs_on_ax(data_df=series_df,
-                                                                                   holdout=pargs["holdout_percentage"],
-                                                                                   verbose=pargs["verbose"])
+            yj_plot_fig, yj_plot_ax = plot_yj_transformed_train_and_test_dfs(data_df=series_df,
+                                                                             holdout=pargs["holdout_percentage"],
+                                                                             verbose=pargs["verbose"])
 
             plt.show()
 

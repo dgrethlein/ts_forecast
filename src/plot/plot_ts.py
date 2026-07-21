@@ -82,9 +82,70 @@ def setup_ts_df_plot(ax_x_label : str = None,
     return (plot_fig, plot_ax)
 
 
-def plot_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
-                                  holdout : float,
-                                  verbose : bool = False) -> Tuple[plt.Figure,plt.Axes]:
+def plot_iqr_hlines_on_ax(ax       : plt.Axes,
+                          data_df  : pd.DataFrame,
+                          verbose  : bool = False):
+    """Summary
+
+    Args:
+        ax (plt.Axes): Description
+        data_df (pd.DataFrame): Description
+        verbose (bool, optional): Description
+    """
+    try:
+        data_median = data_df["kwh_electricity_consumed"].median()
+        data_q1 = data_df["kwh_electricity_consumed"].quantile(0.25)
+        data_q3 = data_df["kwh_electricity_consumed"].quantile(0.75)
+
+        data_iqr = data_q3 - data_q1
+
+        data_lower_bound = data_q1 - (1.5 * data_iqr)
+        data_upper_bound = data_q3 + (1.5 * data_iqr)
+
+        ax.axhline(y=data_median,
+                   color="r",
+                   linestyle="--",
+                   linewidth=2,
+                   label="Training Median")
+
+        ax.axhline(y=data_q1,
+                   color="purple",
+                   linestyle="-.",
+                   linewidth=2,
+                   label="Training Q1")
+
+        ax.axhline(y=data_q3,
+                   color="pink",
+                   linestyle=":",
+                   linewidth=2,
+                   label="Training Q3")
+
+        ax.axhline(y=data_lower_bound,
+                   color="indigo",
+                   linestyle=":",
+                   linewidth=2,
+                   label="Lower Bound (Q1 - 1.5 * IQR)")
+
+        ax.axhline(y=data_upper_bound,
+                   color="magenta",
+                   linestyle="-.",
+                   linewidth=2,
+                   label="Upper Bound (Q3 + 1.5 * IQR)")
+
+        if verbose:
+            print(f"// {dbg()}  Plotted horizontal IQR lines on matplotlib Axes!")
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't plot IQR horizontal lines on matplotlib Axes!\n")
+        traceback.print_exc()
+
+
+
+
+
+def plot_train_and_test_dfs(data_df : pd.DataFrame,
+                            holdout : float,
+                            verbose : bool = False) -> Tuple[plt.Figure,plt.Axes]:
     """Summary
 
     Args:
@@ -104,56 +165,26 @@ def plot_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
                                                             holdout=holdout,
                                                             verbose=verbose)
 
-        train_median = train_df["kwh_electricity_consumed"].median()
-        train_q1 = train_df["kwh_electricity_consumed"].quantile(0.25)
-        train_q3 = train_df["kwh_electricity_consumed"].quantile(0.75)
-
-        train_iqr = train_q3 - train_q1
-
-        train_lower_bound = train_q1 - (1.5 * train_iqr)
-        train_upper_bound = train_q3 + (1.5 * train_iqr)
-
-        ax.axhline(y=train_median,
-                   color="r",
-                   linestyle="--",
-                   linewidth=2,
-                   label="Training Median")
-
-        ax.axhline(y=train_q1,
-                   color="purple",
-                   linestyle="-.",
-                   linewidth=2,
-                   label="Training Q1")
-
-        ax.axhline(y=train_q3,
-                   color="pink",
-                   linestyle=":",
-                   linewidth=2,
-                   label="Training Q3")
-
-        ax.axhline(y=train_lower_bound,
-                   color="indigo",
-                   linestyle=":",
-                   linewidth=2,
-                   label="Lower Bound (Q1 - 1.5 * IQR)")
-
-        ax.axhline(y=train_upper_bound,
-                   color="magenta",
-                   linestyle="-.",
-                   linewidth=2,
-                   label="Upper Bound (Q3 + 1.5 * IQR)")
-
+        # Plots the training data.
         ax.plot(np.array(list(range(len(train_df)))),
                 train_df["kwh_electricity_consumed"].values,
                 alpha=0.5,
                 label="Training data",
                 c="k")
 
+        # Plots the testing data (to be forecast).
         ax.plot(np.array(list(range(len(train_df), len(data_df)))),
                 test_df["kwh_electricity_consumed"].values,
                 alpha=0.5,
                 label="Testing data",
                 c="g")
+
+        # Plots the IQR lines on the matplotlib Axes.
+        plot_iqr_hlines_on_ax(ax=ax,
+                              data_df=train_df,
+                              verbose=verbose)
+
+
 
         ax.legend()
 
@@ -167,9 +198,10 @@ def plot_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
     return (fig, ax)
 
 
-def plot_yj_transformed_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
-                                                 holdout : float,
-                                                 verbose : bool = False) -> Tuple[plt.Figure,plt.Axes]:
+# pylint: disable=too-many-locals
+def plot_yj_transformed_train_and_test_dfs(data_df : pd.DataFrame,
+                                           holdout : float,
+                                           verbose : bool = False) -> Tuple[plt.Figure,plt.Axes]:
     """Summary
 
     Args:
@@ -205,57 +237,24 @@ def plot_yj_transformed_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
                                                + f"(lambda = {yj_lambda:.3f})]."),
                                    verbose=verbose)
 
+        # Plots the training data.
         ax.plot(np.array(list(range(len(train_df)))),
                 transf_train_df["kwh_electricity_consumed"].values,
                 alpha=0.5,
                 label="Training data",
                 c="k")
 
-        train_median = transf_train_df["kwh_electricity_consumed"].median()
-        train_q1 = transf_train_df["kwh_electricity_consumed"].quantile(0.25)
-        train_q3 = transf_train_df["kwh_electricity_consumed"].quantile(0.75)
-
-        train_iqr = train_q3 - train_q1
-
-        train_lower_bound = train_q1 - (1.5 * train_iqr)
-        train_upper_bound = train_q3 + (1.5 * train_iqr)
-
-        ax.axhline(y=train_median,
-
-                   color="r",
-                   linestyle="--",
-                   linewidth=2,
-                   label="Training Median")
-
-        ax.axhline(y=train_q1,
-                   color="purple",
-                   linestyle="-.",
-                   linewidth=2,
-                   label="Training Q1")
-
-        ax.axhline(y=train_q3,
-                   color="pink",
-                   linestyle=":",
-                   linewidth=2,
-                   label="Training Q3")
-
-        ax.axhline(y=train_lower_bound,
-                   color="indigo",
-                   linestyle=":",
-                   linewidth=2,
-                   label="Lower Bound (Q1 - 1.5 * IQR)")
-
-        ax.axhline(y=train_upper_bound,
-                   color="magenta",
-                   linestyle="-.",
-                   linewidth=2,
-                   label="Upper Bound (Q3 + 1.5 * IQR)")
-
+        # Plots the testing data.
         ax.plot(np.array(list(range(len(train_df), len(data_df)))),
                 transf_test_df["kwh_electricity_consumed"].values,
                 alpha=0.5,
                 label="Testing data",
                 c="g")
+
+        # Plots the IQR lines on the matplotlib Axes.
+        plot_iqr_hlines_on_ax(ax=ax,
+                              data_df=transf_train_df,
+                              verbose=verbose)
 
         ax.legend()
 

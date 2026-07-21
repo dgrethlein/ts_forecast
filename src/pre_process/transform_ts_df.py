@@ -62,14 +62,25 @@ def box_cox_transform(data_df        : pd.DataFrame,
         if box_cox_lambda is None:
             transformed, best_lambda = boxcox(data_df["kwh_electricity_consumed"].values)
 
+            if verbose:
+                print(f"\n// {dbg()}  Applied Box-Cox transformation using "
+                      + f"lambda = {best_lambda} on "
+                      + f"time series pandas DataFrame of length {len(data_df)} frames!\n")
+
         # Applies a specific Box-Cox transformation (using provided lambda value)
         # to supplied time series DataFrame for normalization.
         elif is_finite_float(box_cox_lambda):
             transformed, _ = boxcox(data_df["kwh_electricity_consumed"].values,
                                     box_cox_lambda)
 
+            if verbose:
+                print(f"\n// {dbg()}  Applied Box-Cox transformation using "
+                      + f"lambda = {box_cox_lambda} on "
+                      + f"time series pandas DataFrame of length {len(data_df)} frames!\n")
+
         # Re-packages the transformed data into pandas DataFrame.
         transformed_df = pd.DataFrame(transformed, columns=data_df.columns.values)
+
 
     except (AttributeError, IndexError, KeyError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't perform the Box-Cox transform on DataFrame!\n")
@@ -97,7 +108,7 @@ def difference_transform(data_df : pd.DataFrame,
 
             if verbose:
                 print(f"\n// {dbg()}  Applied differencing (period = {period} frames) on "
-                      + f"time series pandas DataFrame of length {len(data_df)} frames!")
+                      + f"time series pandas DataFrame of length {len(data_df)} frames!\n")
 
     except (AttributeError, IndexError, KeyError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't perform the difference transform on DataFrame!\n")
@@ -126,6 +137,11 @@ def yeo_johnson_transform(data_df : pd.DataFrame,
         yj_transformer.fit(data_df)
 
         transformed_df = yj_transformer.transform(data_df)
+
+        if verbose:
+            print(f"\n// {dbg()}  Applied Yeo-Johnson transformation using "
+                  + f"lambda = {yj_transformer.lambdas_[0]:.3f} on "
+                  + f"time series pandas DataFrame of length {len(data_df)} frames!\n")
 
     except (AttributeError, IndexError, KeyError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't perform the Yeo-Johnson transform on DataFrame!\n")

@@ -45,6 +45,7 @@ def get_ts_forecast_args_parser() -> argparse.ArgumentParser:
                                                            + "sampled hourly from 2011 to 2014."))
 
         # Adds command line arguments to anticipate to ArgumentParser.
+        add_difference_period_arg_to_parser(parser=args_parser)
         add_forecast_horizon_arg_to_parser(parser=args_parser)
         add_holdout_percentage_arg_to_parser(parser=args_parser)
         add_num_cv_folds_arg_to_parser(parser=args_parser)
@@ -57,11 +58,38 @@ def get_ts_forecast_args_parser() -> argparse.ArgumentParser:
     return args_parser
 
 
-def add_forecast_horizon_arg_to_parser(parser : argparse.ArgumentParser):
-    """Summary
+def add_difference_period_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``difference_period`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only non-negative finite integers, and has
+    a default value of 1; corresponding to differencing adjacent time-steps. The difference
+    period is designed to reveal seaonality in the time series data.
 
     Args:
-        parser (argparse.ArgumentParser): Description
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--difference_period",
+                            default=1,
+                            type=int,
+                            required=False,
+                            help=("The differencing period for testing for "
+                                  + "seasonality in the time series data. "
+                                  + "Default value is ``1`` time-step (1 hour)."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add the `difference_period` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
+def add_forecast_horizon_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``forecast_horizon`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only non-negative finite integers, and
+    has a default value of 240; corresponding to 10 days of hourly obeservations. The
+    forecast horizon is how far into the future will a time series forecasting model
+    be asked to predict.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
     """
     try:
         parser.add_argument("--forecast_horizon",
