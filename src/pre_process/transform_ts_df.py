@@ -31,6 +31,7 @@ from sklearn.preprocessing import PowerTransformer
 
 from ..utils.misc import dbg, err
 from ..utils.misc import is_finite_float
+from ..utils.misc import is_nonneg_finite_int
 
 
 #==============================================================================
@@ -76,6 +77,33 @@ def box_cox_transform(data_df        : pd.DataFrame,
 
     return (transformed_df, best_lambda)
 
+
+def difference_transform(data_df : pd.DataFrame,
+                         period  : int = 1,
+                         verbose : bool = False) -> pd.DataFrame:
+    """Summary
+
+    Args:
+        data_df (pd.DataFrame): Description
+
+    Returns:
+        pd.DataFrame: Description
+    """
+    transformed_df = None
+
+    try:
+        if is_nonneg_finite_int(period):
+            transformed_df = data_df.diff(period=period)
+
+            if verbose:
+                print(f"\n// {dbg()}  Applied differencing (period = {period} frames) on "
+                      + f"time series pandas DataFrame of length {len(data_df)} frames!")
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't perform the difference transform on DataFrame!\n")
+        traceback.print_exc()
+
+    return transformed_df
 
 
 def yeo_johnson_transform(data_df : pd.DataFrame,

@@ -33,12 +33,15 @@ from ..pre_process.split_ts_df import split_ts_df_into_train_and_test
 from ..pre_process.transform_ts_df import yeo_johnson_transform
 
 from ..utils.misc import dbg, err
-
+from ..utils.misc import is_non_empty_str
 
 #==============================================================================
 #       TIME SERIES PLOTTING FUNCTION(s)
 #==============================================================================
-def setup_ts_df_plot(verbose : bool = False) -> Tuple[plt.Figure, plt.Axes]:
+def setup_ts_df_plot(ax_x_label : str = None,
+                     ax_y_label : str = None,
+                     plot_title : str = None,
+                     verbose    : bool = False) -> Tuple[plt.Figure, plt.Axes]:
     """Summary
     """
     plot_fig = None
@@ -49,12 +52,25 @@ def setup_ts_df_plot(verbose : bool = False) -> Tuple[plt.Figure, plt.Axes]:
             print(f"\n// {dbg()}  Attempting to set up matplotlib plot "
                   + "for time series DataFrame!\n")
 
+        # Initializes matplotlib Figure and Axes objects.
         plot_fig, plot_ax = plt.subplots(figsize=(10,5))
 
-        plot_ax.set_xlabel("Time-steps (Hourly)")
-        plot_ax.set_ylabel("Electricity consumption (kwh)")
+        # Ensures a valid x-axis label is used.
+        if ax_x_label is None or not is_non_empty_str(ax_x_label):
+            ax_x_label = "Time-steps (Hourly)"
 
-        plot_fig.suptitle("Hourly electricity consumption (kwh) for from 2011 to 2014.")
+        # Ensures a valid y-axis label is used.
+        if ax_y_label is None or not is_non_empty_str(ax_y_label):
+            ax_y_label = "Electricity consumption (kwh)"
+
+        # Ensures a valid plot title is used.
+        if plot_title is None or not is_non_empty_str(plot_title):
+            plot_title = "Hourly electricity consumption (kwh) for from 2011 to 2014."
+
+        # Apply labeling and title.
+        plot_ax.set_xlabel(ax_x_label)
+        plot_ax.set_ylabel(ax_y_label)
+        plot_fig.suptitle(plot_title)
 
         if verbose:
             print(f"\n// {dbg()}  Successfully set up matplotlib plot!\n")
@@ -64,30 +80,6 @@ def setup_ts_df_plot(verbose : bool = False) -> Tuple[plt.Figure, plt.Axes]:
         traceback.print_exc()
 
     return (plot_fig, plot_ax)
-
-
-def plot_ts_df_on_ax(data_df : pd.DataFrame,
-                     verbose : bool = False):
-    """Summary
-
-    Args:
-        ax (plt.Axes): Description
-        data_df (pd.DataFrame): Description
-        verbose (bool, optional): Description
-    """
-    try:
-        fig, ax = setup_ts_df_plot(verbose=verbose)
-
-        ax.plot(np.array(list(range(len(data_df)))),
-                data_df["kwh_electricity_consumed"].values,
-                alpha=0.5)
-
-        fig.tight_layout()
-        plt.show()
-
-    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
-        print(f"\n// {err()}  Couldn't plot time series DataFrame(s) on matplotlib Axes!\n")
-        traceback.print_exc()
 
 
 def plot_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
@@ -112,15 +104,14 @@ def plot_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
                                                             holdout=holdout,
                                                             verbose=verbose)
 
-        ax.plot(np.array(list(range(len(train_df)))),
-                train_df["kwh_electricity_consumed"].values,
-                alpha=0.5,
-                label="Training data",
-                c="k")
-
         train_median = train_df["kwh_electricity_consumed"].median()
         train_q1 = train_df["kwh_electricity_consumed"].quantile(0.25)
         train_q3 = train_df["kwh_electricity_consumed"].quantile(0.75)
+
+        train_iqr = train_q3 - train_q1
+
+        train_lower_bound = train_q1 - (1.5 * train_iqr)
+        train_upper_bound = train_q3 + (1.5 * train_iqr)
 
         ax.axhline(y=train_median,
                    color="r",
@@ -129,17 +120,34 @@ def plot_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
                    label="Training Median")
 
         ax.axhline(y=train_q1,
-                   color="pink",
+                   color="purple",
                    linestyle="-.",
                    linewidth=2,
                    label="Training Q1")
 
         ax.axhline(y=train_q3,
-                   color="purple",
+                   color="pink",
                    linestyle=":",
                    linewidth=2,
                    label="Training Q3")
 
+        ax.axhline(y=train_lower_bound,
+                   color="indigo",
+                   linestyle=":",
+                   linewidth=2,
+                   label="Lower Bound (Q1 - 1.5 * IQR)")
+
+        ax.axhline(y=train_upper_bound,
+                   color="magenta",
+                   linestyle="-.",
+                   linewidth=2,
+                   label="Upper Bound (Q3 + 1.5 * IQR)")
+
+        ax.plot(np.array(list(range(len(train_df)))),
+                train_df["kwh_electricity_consumed"].values,
+                alpha=0.5,
+                label="Training data",
+                c="k")
 
         ax.plot(np.array(list(range(len(train_df), len(data_df)))),
                 test_df["kwh_electricity_consumed"].values,
@@ -182,12 +190,20 @@ def plot_yj_transformed_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
         transf_train_df, yj_transformer = yeo_johnson_transform(data_df=train_df,
                                                                 verbose=verbose)
 
+        yj_lambda = yj_transformer.lambdas_[0]
+
         # Applies the same transformation to the testing data.
         transf_test_df = yj_transformer.transform(test_df)
 
         # Sets up a plotting Figure and Axes.
-        fig, ax = setup_ts_df_plot(verbose=verbose)
-        ax.set_ylabel("Electricity consumption (kwh) [Yeo-Johnson Transformed]")
+        fig, ax = setup_ts_df_plot(ax_y_label=("Electricity consumption (kwh) "
+                                               + "[Y-J Transformed "
+                                               + f"(lambda = {yj_lambda:.3f})]"),
+                                   plot_title=("Hourly electricity consumption (kwh) "
+                                               + "for from 2011 to 2014 "
+                                               + "[Yeo-Johnson Transformed "
+                                               + f"(lambda = {yj_lambda:.3f})]."),
+                                   verbose=verbose)
 
         ax.plot(np.array(list(range(len(train_df)))),
                 transf_train_df["kwh_electricity_consumed"].values,
@@ -199,23 +215,41 @@ def plot_yj_transformed_train_and_test_dfs_on_ax(data_df : pd.DataFrame,
         train_q1 = transf_train_df["kwh_electricity_consumed"].quantile(0.25)
         train_q3 = transf_train_df["kwh_electricity_consumed"].quantile(0.75)
 
+        train_iqr = train_q3 - train_q1
+
+        train_lower_bound = train_q1 - (1.5 * train_iqr)
+        train_upper_bound = train_q3 + (1.5 * train_iqr)
+
         ax.axhline(y=train_median,
+
                    color="r",
                    linestyle="--",
                    linewidth=2,
                    label="Training Median")
 
         ax.axhline(y=train_q1,
-                   color="pink",
+                   color="purple",
                    linestyle="-.",
                    linewidth=2,
                    label="Training Q1")
 
         ax.axhline(y=train_q3,
-                   color="purple",
+                   color="pink",
                    linestyle=":",
                    linewidth=2,
                    label="Training Q3")
+
+        ax.axhline(y=train_lower_bound,
+                   color="indigo",
+                   linestyle=":",
+                   linewidth=2,
+                   label="Lower Bound (Q1 - 1.5 * IQR)")
+
+        ax.axhline(y=train_upper_bound,
+                   color="magenta",
+                   linestyle="-.",
+                   linewidth=2,
+                   label="Upper Bound (Q3 + 1.5 * IQR)")
 
         ax.plot(np.array(list(range(len(train_df), len(data_df)))),
                 transf_test_df["kwh_electricity_consumed"].values,

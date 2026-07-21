@@ -19,6 +19,7 @@ Module Contents
 
 import traceback
 
+import matplotlib.pyplot as plt
 
 import numpy as np
 import pandas as pd
@@ -30,6 +31,7 @@ from .pre_process.split_ts_df import load_dataset_df_into_series_dfs
 from .pre_process.split_ts_df import split_ts_df_into_train_and_test
 
 from .pre_process.transform_ts_df import box_cox_transform
+from .pre_process.transform_ts_df import difference_transform
 from .pre_process.transform_ts_df import yeo_johnson_transform
 
 from .utils.args import parse_run_ts_forecast_args
@@ -64,9 +66,7 @@ def run_ts_forecast():
                                                                                    holdout=pargs["holdout_percentage"],
                                                                                    verbose=pargs["verbose"])
 
-            # transformed_df, yj_transformer = yeo_johnson_transform(data_df=train_df,
-            #                                                        verbose=pargs["verbose"])
-
+            plt.show()
 
 
     except (AttributeError, TypeError, ValueError):
