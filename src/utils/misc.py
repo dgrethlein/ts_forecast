@@ -231,7 +231,7 @@ def dbg(show_date : bool = False) -> str:
         str: Color-coded [DEBUG]-style ISO 8601 timestamp
 
     Args:
-        show_date (bool, optional): Description
+        show_date (bool, optional): The :class:`str` formatted for [DEBUG] console output.
     """
     dbg_str = (f"[{ok_blue_str(bold_str('DEBUG'))}:" +
                f" {warn_str(datetime.datetime.now().strftime('%H:%M:%S.%f'))}")
@@ -250,7 +250,7 @@ def err(show_date : bool = False) -> str:
         str: Color-coded [ERROR]-style ISO 8601 timestamp
 
     Args:
-        show_date (bool, optional): Description
+        show_date (bool, optional): The :class:`str` formatted for [ERROR] console output.
     """
     err_str = (f"[{fail_str('ERROR')}:" +
                f" {warn_str(datetime.datetime.now().strftime('%H:%M:%S.%f'))}")
