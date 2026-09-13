@@ -8,6 +8,7 @@ mlflow
 pylint
 pyspark
 scikit-learn
+sktime
 statsmodels
 sphinx_rtd_theme
 torch

@@ -28,34 +28,58 @@ from .misc import dbg, err
 #==============================================================================
 #       COMMAND LINE ARGUMENT(s) PARSER FUNCTION(s)
 #==============================================================================
-def get_ts_forecast_args_parser() -> argparse.ArgumentParser:
-    """Summary
+def get_args_parser() -> argparse.ArgumentParser:
+    """Creates and returns a top-level :class:`argparse.ArgumentParser`for
 
     Returns:
-        argparse.ArgumentParser: Description
+        argparse.ArgumentParser: A command line argument parser.
     """
     args_parser = None
 
     try:
-        # Command line argument parser for running python modules directly from command line.
-        args_parser = argparse.ArgumentParser(description=("Pipeline that will "
-                                                           + "train and test time series "
-                                                           + "forecasting models using "
-                                                           + "electricity consumption data "
-                                                           + "sampled hourly from 2011 to 2014."))
-
-        # Adds command line arguments to anticipate to ArgumentParser.
-        add_difference_period_arg_to_parser(parser=args_parser)
-        add_forecast_horizon_arg_to_parser(parser=args_parser)
-        add_holdout_percentage_arg_to_parser(parser=args_parser)
-        add_num_cv_folds_arg_to_parser(parser=args_parser)
-        add_verbose_arg_to_parser(parser=args_parser)
+        args_parser = argparse.ArgumentParser(prog="TSF",
+                                              description=("Process command line arguments "
+                                                           + "for time series forecasting."))
 
     except (AttributeError, TypeError, ValueError):
-        print(f"\n// {err()}  Couldn't get time series forecasting ArgumentParser!\n")
+        print(f"\n// {err()}  Couldn't get ArgumentParser!\n")
         traceback.print_exc()
 
     return args_parser
+
+
+def add_ts_forecast_args_parser(parser : argparse.ArgumentParser):
+    """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
+    several command line arguments when a python script is invoked.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    tsf_parser = None
+
+    try:
+        # Command line argument sub-parser for running time series forecasting
+        # modules directly from the command line.
+        tsf_parser = parser.add_subparsers(title="forecast",
+                                           help="Forecast time series data.",
+                                           description=("Pipeline that will "
+                                                        + "train and test time series "
+                                                        + "forecasting models using "
+                                                        + "electricity consumption data "
+                                                        + "sampled hourly from 2011 to 2014."))
+
+        # Adds command line arguments to anticipate to ArgumentParser.
+        add_difference_period_arg_to_parser(parser=tsf_parser)
+        add_forecast_horizon_arg_to_parser(parser=tsf_parser)
+        add_holdout_percentage_arg_to_parser(parser=tsf_parser)
+        add_num_cv_folds_arg_to_parser(parser=tsf_parser)
+        add_verbose_arg_to_parser(parser=tsf_parser)
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add time series forecasting ArgumentParser!\n")
+        traceback.print_exc()
+
+    return tsf_parser
 
 
 def add_difference_period_arg_to_parser(parser : argparse.ArgumentParser):
@@ -179,25 +203,22 @@ def add_verbose_arg_to_parser(parser : argparse.ArgumentParser):
 #==============================================================================
 #       PARSING COMMAND LINE ARGUMENT(s) FUNCTION(s)
 #==============================================================================
-def parse_run_ts_forecast_args() -> Dict:
-    """Parses all of the arguments from a :class:`argparse.ArgumentParser` that were
-    configured to receive command-line arguments for running time series forecasting
-    scripts; storing the result into a dictionary.
+def parse_args(parser : argparse.ArgumentParser) -> Dict:
+    """Parses all of the arguments from a :class:`argparse.ArgumentParser`,
+    storing the result into a dictionary.
 
     Returns:
         Dict: A dictionary containing all of the command-line arguments that were
-        parsed by a :class:`argparse.ArgumentParser` in order to
-        run a time series forecasting.
+        parsed by a :class:`argparse.ArgumentParser`.
     """
     pargs = None
 
     try:
         # Parses the command line arguments and stores results in a dictionary.
-        pargs = vars(get_ts_forecast_args_parser().parse_args())
+        pargs = vars(parser.parse_args())
 
     except (AttributeError, TypeError, ValueError):
-        print(f"\n// {err()}  Couldn't parse the run time series forecasting "
-              + "arguments from the command line!\n")
+        print(f"\n// {err()}  Couldn't parse arguments from the command line!\n")
         traceback.print_exc()
 
     return pargs
@@ -209,5 +230,9 @@ def parse_run_ts_forecast_args() -> Dict:
 if __name__ == "__main__":
 
     print(f"\n// {dbg()}  Running File['{__file__}'] as __main__!\n")
+
+    tsf_parser = get_args_parser()
+    add_ts_forecast_args_parser(tsf_parser)
+    pargs = parse_args(tsf_parser)
 
     print(f"\n// {dbg()}  All done here, nothing to see!\n")
