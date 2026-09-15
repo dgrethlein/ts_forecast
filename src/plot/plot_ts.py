@@ -140,9 +140,6 @@ def plot_iqr_hlines_on_ax(ax       : plt.Axes,
         traceback.print_exc()
 
 
-
-
-
 def plot_train_and_test_dfs(data_df : pd.DataFrame,
                             holdout : float,
                             verbose : bool = False) -> Tuple[plt.Figure,plt.Axes]:
@@ -198,7 +195,7 @@ def plot_train_and_test_dfs(data_df : pd.DataFrame,
 # pylint: disable=too-many-locals
 def plot_yj_transformed_train_and_test_dfs(data_df : pd.DataFrame,
                                            holdout : float,
-                                           verbose : bool = False) -> Tuple[plt.Figure,plt.Axes]:
+                                           verbose : bool = False) -> Tuple:
     """Summary
 
     Args:
@@ -208,6 +205,8 @@ def plot_yj_transformed_train_and_test_dfs(data_df : pd.DataFrame,
     """
     fig = None
     ax = None
+    fig2 = None
+    ax2 = None
 
     try:
         # Splits the time series sample into train and test sets.
@@ -272,6 +271,45 @@ def plot_yj_transformed_train_and_test_dfs(data_df : pd.DataFrame,
         traceback.print_exc()
 
     return (fig, ax, fig2, ax2)
+
+
+def plot_diff_transformed_train_and_test_dfs(data_df : pd.DataFrame,
+                                             holdout : float,
+                                             period  : int = 1,
+                                             verbose : bool = False) -> Tuple:
+    """Summary
+
+    Args:
+        data_df (pd.DataFrame): Description
+        holdout (float): Description
+        period (int, optional): Description
+        verbose (bool, optional): Description
+
+    Returns:
+        Tuple: Description
+    """
+    fig = None
+    ax = None
+    fig2 = None
+    ax2 = None
+
+    try:
+        # Splits the time series sample into train and test sets.
+        train_df, test_df = split_ts_df_into_train_and_test(data_df=data_df,
+                                                            holdout=holdout,
+                                                            verbose=verbose)
+
+
+
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't plot the difference-transformed train and test "
+              + "DataFrame(s) on matplotlib Axes!\n")
+        traceback.print_exc()
+
+    return (fig, ax, fig2, ax2)
+
+
 
 
 #==============================================================================

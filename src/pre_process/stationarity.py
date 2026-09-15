@@ -89,7 +89,7 @@ def perform_kpss_test(series_df : pd.DataFrame,
         if verbose:
             print(f"\n// {dbg()}  Attempting to perform a KPSS test for stationarity!")
 
-        kpss_results =
+        # kpss_results =
 
 
         if verbose:

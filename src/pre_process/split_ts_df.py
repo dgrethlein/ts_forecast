@@ -16,6 +16,18 @@ as splitting methods for training and testing time series forecasting models.
 Module Contents
 ===============
 
+Attributes:
+    DATA_TSF_FILE_PATH (str): The file name path of the time series dataset.
+
+        Stored on the local file system at: ``data/electricity_hourly_dataset.tsf``.
+
+        Originally acquired from: https://zenodo.org/records/4656140 .
+
+    NUM_INDIVIDUAL_TS_DFS (int): The number (``321``) of individual time series samples
+        compactly stored in a single (.tsf) file, to be broken into individual series.
+    VALUE_COLUMN_NAME (str): The column name (``kwh_electricity_consumed``) under which
+        the time series data for this dataset is stored under.
+
 """
 
 from pathlib import Path
@@ -34,32 +46,49 @@ from ..utils.misc import is_nonneg_finite_int
 
 
 #==============================================================================
+#       TIME SERIES DATASET CONSTANT(s)
+#==============================================================================
+DATA_TSF_FILE_PATH = "data/electricity_hourly_dataset.tsf"
+NUM_INDIVIDUAL_TS_DFS = 321
+VALUE_COLUMN_NAME = "kwh_electricity_consumed"
+
+
+#==============================================================================
 #       LOAD TIME SERIES DATASET FROM (.tsf) FILE FUNCTION(s)
 #==============================================================================
 def load_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.DataFrame],List[str]]:
-    """Summary
-
-    Returns:
-        Tuple[List[pd.DataFrame], List[str]]: Description
+    """Loads the entire time series dataset from a (.tsf) file, stored in
+    :const:`DATA_TSF_FILE_PATH` on the local file system, and breaks the resulting
+    :class:`pandas.DataFrame` into :const:`NUM_INDIVIDUAL_TS_DFS` (321) individual
+    time series :class:`pandas DataFrame(s)<pandas.DataFrame>`.
 
     Args:
-        verbose (bool, optional): Description
+        verbose (bool, optional): Boolean indicating whether or not to print out
+            [DEBUG]-style messages to the console describing what is happening.
+            Default is ``False``.
+
+    Returns:
+        Tuple[List[pd.DataFrame], List[str]]: A tuple containing a list of 321
+            individual time series samples, each stored in their own :class:`pandas.DataFrame>`,
+            along with a list of 321 strings, corresponding to the names of each series.
     """
     series_dfs = []
     series_names = []
 
     try:
         # Load the dataset (.tsf) file into a MultiIndex DataFrame
-        data_path = Path("data/electricity_hourly_dataset.tsf")
+        data_path = Path(DATA_TSF_FILE_PATH)
         data_df, metadata = load_tsf_to_dataframe(full_file_path_and_name=data_path,
                                                   replace_missing_vals_with="NaN",
-                                                  value_column_name="kwh_electricity_consumed")
+                                                  value_column_name=VALUE_COLUMN_NAME)
         if verbose:
             print(f"\n// {dbg()}  Dataset metadata := {metadata}\n")
 
         # Iterates over the 321 time series samples in the dataset.
-        for sample_idx in range(1,322):
-            sample_name = f"T{sample_idx}"
+        for sample_idx in range(NUM_INDIVIDUAL_TS_DFS):
+
+            # Sample names are indexed starting at 1.
+            sample_name = f"T{sample_idx + 1}"
 
             # Splits the time series samples by name into individual pandas DataFrame(s).
             sample_df = data_df.loc[sample_name].reset_index(drop=True)
@@ -85,23 +114,30 @@ def load_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.Dat
 #==============================================================================
 #       SPLIT TIME SERIES DATASET FUNCTION(s)
 #==============================================================================
-def get_dataset_train_test_cv_splits(cv_random_seed : int,
-                                     data_dfs       : List[pd.DataFrame],
-                                     num_cv_folds   : int,
-                                     verbose        : bool = False) -> Dict:
-    """Summary
+def get_dataset_train_test_cv_splits_idx_dict(data_dfs       : List[pd.DataFrame],
+                                              cv_random_seed : int = 0,
+                                              num_cv_folds   : int = 5,
+                                              verbose        : bool = False) -> Dict:
+    """Gets a dictionary containing the indices of time series samples split into
+    train and test sets for k-fold cross-validated experiments.
 
     Args:
-        cv_random_seed (int): Description
-        data_dfs (List[pd.DataFrame]): Description
-        num_cv_folds (int): Description
-        verbose (bool, optional): Description
+        data_dfs (List[pd.DataFrame]): A list of individual time series samples stored
+            in :class:`pandas DataFrame(s)<pandas.DataFrame>`.
+        cv_random_seed (int, optional): The proposed non-negative finite integer
+            that will be used to seed all random number generators used.
+            Default value is ``0``.
+        num_cv_folds (int, optional): The proposed non-negative finite integer greater
+            than 1 that describes the number of disjoint folds to split the time series
+            dataset into for the purpose of conducting cross-validated experiments.
+            Default value is ``5``.
+        verbose (bool, optional): Boolean indicating whether or not to print out
+            [DEBUG]-style messages to the console describing what is happening.
+            Default is ``False``.
 
     Returns:
-        Dict: Description
-
-    Deleted Parameters:
-        num_folds (int): Description
+        Dict: A dictionary containing the indices of time series samples split into
+            train and test sets for k-fold cross-validated experiments.
     """
     splits_dict = {}
 
@@ -137,15 +173,22 @@ def get_dataset_train_test_cv_splits(cv_random_seed : int,
 def split_ts_df_into_train_and_test(data_df : pd.DataFrame,
                                     holdout : float,
                                     verbose : bool = False) -> Tuple[pd.DataFrame,pd.DataFrame]:
-    """Summary
+    """Splits a single time series sample stored in a :class:`pandas.DataFrame>` into
+    two :class:`pandas DataFrame(s)<pandas.DataFrame>`. The first DataFrame being used
+    to train a predictive model, and the second used to test the model. The fraction of
+    data withheld for testing is controlled using the :arg:`holdout` argument and is
+    expected to be a valid percentage in the range (0.0, 1.0).
 
     Args:
-        data_df (pd.DataFrame): Description
-        holdout (float): Description
-        verbose (bool, optional): Description
+        data_df (pd.DataFrame): A single time series sample stored in a :class:`pandas.DataFrame>`.
+        holdout (float): The fraction of time series data to be withheld in the training set.
+        verbose (bool, optional): Boolean indicating whether or not to print out
+            [DEBUG]-style messages to the console describing what is happening.
+            Default is ``False``.
 
     Returns:
-        Tuple[pd.DataFrame, pd.DataFrame]: Description
+        Tuple[pd.DataFrame, pd.DataFrame]: A tuple of two time series partitioned from
+            the supplied time series sample, each stored in a :class:`pandas.DataFrame`.
     """
     train_data_df = None
     test_data_df = None
