@@ -37,7 +37,7 @@ def get_args_parser() -> argparse.ArgumentParser:
     """
     args_parser = None
     try:
-        args_parser = argparse.ArgumentParser(prog="TSF",
+        args_parser = argparse.ArgumentParser(prog="PROJECT",
                                               description=("Process command line arguments "
                                                            + "for time series forecasting."))
 
