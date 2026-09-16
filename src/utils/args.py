@@ -3,7 +3,6 @@
 """
 :mod:`Command Line Argument Parsing Utility<src.utils.args>` module.
 
-
 Module Description
 ==================
 
@@ -69,8 +68,8 @@ def add_ts_cluster_args_parser(parser : argparse.ArgumentParser):
                                                            + "sampled hourly from 2011 to 2014."))
 
         # Adds command line arguments to anticipate to ArgumentParser.
-        add_num_cv_folds_arg_to_parser(parser=tsf_parser)
-        add_verbose_arg_to_parser(parser=tsf_parser)
+        add_num_cv_folds_arg_to_parser(parser=tsclu_parser)
+        add_verbose_arg_to_parser(parser=tsclu_parser)
 
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't add time series clustering ArgumentParser!\n")
@@ -112,6 +111,42 @@ def add_ts_forecast_args_parser(parser : argparse.ArgumentParser):
 #==============================================================================
 #       COMMAND LINE ADD ARGUMENT(s) TO PARSE FUNCTION(s)
 #==============================================================================
+def add_cluster_method_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``cluster_method`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes non-empty string values, and has
+    a default value of ``K_Medoids``.
+
+    .. note::
+        The ``cluster_method`` argument must be chosen from one of the following options:
+
+            * ``BIRCH``     - Balanced Iterative Reducing and Clustering Using Hierarchies (BIRCH).
+            * ``DBSCAN``    - Density-Based Spatial Clustering of Applications with Noise (DBSCAN).
+            * ``GMM``       - Gaussian Mixture Model (GMM).
+            * ``IDEC``      - Improved Deep Embedding Clustering (IDEC).
+            * ``K_Medoids`` - K Medoids partitioning around medoids (PAM).
+            * ``OPTICS``    - Ordering Points to Identify the Cluster Structure (OPTICS).
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--cluster_method",
+                            default="K_Means",
+                            choices=["BIRCH",
+                                     "DBSCAN",
+                                     "GMM",
+                                     "IDEC",
+                                     "K_Medoids",
+                                     "OPTICS"],
+                            required=False,
+                            type=str,
+                            help="")
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add cluster method argument to ArgumentParser!\n")
+        traceback.print_exc()
+
+
 def add_difference_period_arg_to_parser(parser : argparse.ArgumentParser):
     """Adds the ``difference_period`` argument to an :class:`argparse.ArgumentParser`.
     This is an optional argument that takes only non-negative finite integers, and has
@@ -187,6 +222,49 @@ def add_holdout_percentage_arg_to_parser(parser : argparse.ArgumentParser):
         traceback.print_exc()
 
 
+def add_num_clusters_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``num_clusters`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only positive finite integers greater than 1,
+    and has a default value of 10.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--num_clusters",
+                            default=10,
+                            type=int,
+                            required=False,
+                            help=("The number of clusters to produce from time series dataset. "
+                                  + "Default value is ``10``."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add `num_clusters` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
+def add_num_cluster_iters_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the `num_cluster_iters` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only positive finite integers,
+    and has a default value of 25.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--num_cluster_iters",
+                            default=25,
+                            type=int,
+                            required=False,
+                            help=("The number of clustering iterations for grouping "
+                                  + "samples from time series dataset into clusters. "
+                                  + "Defaul value is ``25``."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}. Couldn't add `num_iterations` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
 def add_num_cv_folds_arg_to_parser(parser : argparse.ArgumentParser):
     """Adds the ``num_cv_folds`` argument to an :class:`argparse.ArgumentParser`.
     This is an optional argument that takes only non-negative finite integers,
@@ -205,6 +283,60 @@ def add_num_cv_folds_arg_to_parser(parser : argparse.ArgumentParser):
 
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't add `num_cv_folds` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
+def add_random_seed_arg_to_parser(parser : argparse.ArgumentParser):
+    """Add the ``random_seed`` argument to an :class:`argparse.ArgumentParser`.
+    The is an optional argument that takes only non-negative finite integers,
+    and has a default value of 0.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--random_seed",
+                            default=0,
+                            type=int,
+                            required=False,
+                            help=("A random number generator seed value to be "
+                                  + "used in experiments. Default value is ``0``."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add `random_seed` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
+def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``ts_dist_func`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only non-empty strings,
+    and has a default value of `DTW`.
+
+    .. note::
+        The ``ts_dist_func`` argument must be chosen from one of the following options:
+
+            * ``Cos`` - Cosine distance (Cos).
+            * ``DTW`` - Dynamic Time Warping (DTW).
+            * ``Euc`` - Euclidean (Euc).
+            * ``SAX`` - Symbolic Aggregate Approxmiation (SAX).
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--ts_dist_func",
+                            default="DTW",
+                            choices=["Cos",
+                                     "DTW",
+                                     "Euc",
+                                     "SAX"],
+                            required=False,
+                            help=("Name of the time series distance function to be used "
+                                  + "in experiments to numerically compare time series to "
+                                  + "one another. Default value is ``DTW``."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add `ts_dist_func` arg to ArgumentParser!\n")
         traceback.print_exc()
 
 
@@ -240,6 +372,9 @@ def parse_args(parser : argparse.ArgumentParser) -> Dict:
     Returns:
         Dict: A dictionary containing all of the command-line arguments that were
         parsed by a :class:`argparse.ArgumentParser`.
+
+    Args:
+        parser (argparse.ArgumentParser): Description
     """
     parsed_args = None
 

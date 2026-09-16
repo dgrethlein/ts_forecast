@@ -384,4 +384,12 @@ def is_non_empty_str(value : Generic) -> bool:
         bool: Boolean indicating whether the provided value was a
             non-empty string or not.
     """
-    return (isinstance(value, str) and len(value) > 0)
+    is_ne_try = False
+
+    try:
+        is_ne_str = isinstance(value, str) and len(value) > 0
+
+    except (AttributeError, TypeError, ValueError):
+        pass
+
+    return is_ne_str

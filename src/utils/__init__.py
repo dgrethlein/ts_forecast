@@ -26,10 +26,15 @@ from .args import add_ts_forecast_args_parser
 #==============================================================================
 #       COMMAND LINE ADD ARGUMENT(s) TO PARSE FUNCTION(s)
 #==============================================================================
+from .args import add_cluster_method_arg_to_parser
 from .args import add_difference_period_arg_to_parser
 from .args import add_forecast_horizon_arg_to_parser
 from .args import add_holdout_percentage_arg_to_parser
+from .args import add_num_clusters_arg_to_parser
+from .args import add_num_cluster_iters_arg_to_parser
 from .args import add_num_cv_folds_arg_to_parser
+from .args import add_ts_dist_func_arg_to_parser
+from .args import add_random_seed_arg_to_parser
 from .args import add_verbose_arg_to_parser
 
 
