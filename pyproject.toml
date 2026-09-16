@@ -18,7 +18,8 @@ dependencies = [
     "sktime (>=1.0.1,<2.0.0)",
     "pyan3 (>=2.6.2,<3.0.0)",
     "statsmodels (>=0.14.6,<0.15.0)",
-    "scipy (>=1.18.0,<2.0.0)"
+    "scipy (>=1.18.0,<2.0.0)",
+    "pydata-sphinx-theme (>=0.21.0,<0.22.0)"
 ]
 package-mode = false
 

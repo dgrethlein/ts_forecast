@@ -57,8 +57,8 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
-# html_theme = 'pydata_sphinx_theme'
+# html_theme = 'sphinx_rtd_theme'
+html_theme = 'pydata_sphinx_theme'
 # html_static_path = ['_static']
 
 # html_css_files = ['style.css']
@@ -90,7 +90,7 @@ napoleon_include_special_with_doc = True
 
 # pyan3 settings
 graphviz_output_format = "svg"
-# graphviz_dot_options = ["Gnewrank=True"]
+graphviz_dot_options = ["Gnewrank=True"]
 
 # -- Options for intersphinx extension ---------------------------------------
 

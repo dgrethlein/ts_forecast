@@ -48,6 +48,35 @@ def get_args_parser() -> argparse.ArgumentParser:
     return args_parser
 
 
+def add_ts_cluster_args_parser(parser : argparse.ArgumentParser):
+    """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
+    several command line arguments when a python script is invoked for the purpose
+    of clustering time series values.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        # Command line argument sub-parser for running time series clustering
+        # modules directly from the command line.
+        sub_parsers = parser.add_subparsers(dest="command")
+        tsclu_parser = sub_parsers.add_parser("cluster",
+                                              help="Cluster time series data.",
+                                              description=("Pipeline that will "
+                                                           + "train and test time series "
+                                                           + "clustering models using "
+                                                           + "electricity consumption data "
+                                                           + "sampled hourly from 2011 to 2014."))
+
+        # Adds command line arguments to anticipate to ArgumentParser.
+        add_num_cv_folds_arg_to_parser(parser=tsf_parser)
+        add_verbose_arg_to_parser(parser=tsf_parser)
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add time series clustering ArgumentParser!\n")
+        traceback.print_exc()
+
+
 def add_ts_forecast_args_parser(parser : argparse.ArgumentParser):
     """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
     several command line arguments when a python script is invoked for the purpose
@@ -56,8 +85,6 @@ def add_ts_forecast_args_parser(parser : argparse.ArgumentParser):
     Args:
         parser (argparse.ArgumentParser): A command line argument parser.
     """
-    tsf_parser = None
-
     try:
         # Command line argument sub-parser for running time series forecasting
         # modules directly from the command line.
@@ -81,7 +108,6 @@ def add_ts_forecast_args_parser(parser : argparse.ArgumentParser):
         print(f"\n// {err()}  Couldn't add time series forecasting ArgumentParser!\n")
         traceback.print_exc()
 
-    return tsf_parser
 
 #==============================================================================
 #       COMMAND LINE ADD ARGUMENT(s) TO PARSE FUNCTION(s)
