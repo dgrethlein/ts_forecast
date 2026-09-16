@@ -3,7 +3,6 @@
 """
 :mod:`Miscellaneous Utilities<src.utils.misc>` module.
 
-
 Module Description
 ==================
 
@@ -384,7 +383,7 @@ def is_non_empty_str(value : Generic) -> bool:
         bool: Boolean indicating whether the provided value was a
             non-empty string or not.
     """
-    is_ne_try = False
+    is_ne_str = False
 
     try:
         is_ne_str = isinstance(value, str) and len(value) > 0

@@ -3,14 +3,15 @@
 """
 :mod:`Utilities<src.utils>` Sub-package.
 
-
 Package Description
 ===================
 
 Package for importing code from all :mod:`Utilities<src.utils>` modules.
 
-
 .. moduleauthor:: David Grethlein
+
+Package Contents
+================
 
 """
 
@@ -31,6 +32,7 @@ from .args import add_difference_period_arg_to_parser
 from .args import add_forecast_horizon_arg_to_parser
 from .args import add_holdout_percentage_arg_to_parser
 from .args import add_num_clusters_arg_to_parser
+from .args import add_num_cluster_inits_arg_to_parser
 from .args import add_num_cluster_iters_arg_to_parser
 from .args import add_num_cv_folds_arg_to_parser
 from .args import add_ts_dist_func_arg_to_parser

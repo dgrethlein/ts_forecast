@@ -119,7 +119,6 @@ def add_cluster_method_arg_to_parser(parser : argparse.ArgumentParser):
     .. note::
         The ``cluster_method`` argument must be chosen from one of the following options:
 
-            * ``BIRCH``     - Balanced Iterative Reducing and Clustering Using Hierarchies (BIRCH).
             * ``DBSCAN``    - Density-Based Spatial Clustering of Applications with Noise (DBSCAN).
             * ``GMM``       - Gaussian Mixture Model (GMM).
             * ``IDEC``      - Improved Deep Embedding Clustering (IDEC).
@@ -132,8 +131,7 @@ def add_cluster_method_arg_to_parser(parser : argparse.ArgumentParser):
     try:
         parser.add_argument("--cluster_method",
                             default="K_Means",
-                            choices=["BIRCH",
-                                     "DBSCAN",
+                            choices=["DBSCAN",
                                      "GMM",
                                      "IDEC",
                                      "K_Medoids",
@@ -243,8 +241,30 @@ def add_num_clusters_arg_to_parser(parser : argparse.ArgumentParser):
         traceback.print_exc()
 
 
+def add_num_cluster_inits_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``num_cluster_inits`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only positive finite integers,
+    and has a default value of 5.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--num_cluster_inits",
+                            default=5,
+                            type=int,
+                            required=False,
+                            help=("The number of cluster initializations to use "
+                                  + "in time series clustering experiments. "
+                                  + "Default value is ``5``."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}. Couldn't add the `num_cluster_inits` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
 def add_num_cluster_iters_arg_to_parser(parser : argparse.ArgumentParser):
-    """Adds the `num_cluster_iters` argument to an :class:`argparse.ArgumentParser`.
+    """Adds the ``num_cluster_iters`` argument to an :class:`argparse.ArgumentParser`.
     This is an optional argument that takes only positive finite integers,
     and has a default value of 25.
 

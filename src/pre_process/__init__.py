@@ -3,7 +3,6 @@
 """
 :mod:`Pre-process Time Series<src.pre_process>` Sub-package.
 
-
 Package Description
 ===================
 
