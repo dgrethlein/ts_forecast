@@ -3,7 +3,6 @@
 """
 :mod:`Time Series Plotting<src.plot.plot_ts>` module.
 
-
 Module Description
 ==================
 

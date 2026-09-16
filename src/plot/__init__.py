@@ -9,7 +9,9 @@ Package Description
 
 Package for importing code from all :mod:`Plotting Time Series<src.plot>` modules.
 
-
 .. moduleauthor:: David Grethlein
+
+Package Contents
+================
 
 """
