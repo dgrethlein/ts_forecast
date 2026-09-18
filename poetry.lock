@@ -861,6 +861,40 @@ files = [
 ]
 
 [[package]]
+name = "dtaidistance"
+version = "2.5.1"
+description = "Distance measures for time series (Dynamic Time Warping, fast C implementation)"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "dtaidistance-2.5.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:c168801c078dbe7de730c0afdbf0973b03d9521cc37e9f5095e39c2b407d4011"},
+    {file = "dtaidistance-2.5.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:74faaa81cef6c3d193f921672e2ab832a66d8ed0d7de3126fdb44d6606a4bb4b"},
+    {file = "dtaidistance-2.5.1-cp311-cp311-win_amd64.whl", hash = "sha256:019226688c14d6cf9dbfe82cfcb97d5a5c85d17abaac5f35ec8accff56659f94"},
+    {file = "dtaidistance-2.5.1-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:1b93b9ef4238d28c5762da54a70a423e2084e2172293ae523641404f7280234b"},
+    {file = "dtaidistance-2.5.1-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f483b59eadb65ff63df9180cbf5d00cfc25fc0690c029422594532fda38a349b"},
+    {file = "dtaidistance-2.5.1-cp312-cp312-win_amd64.whl", hash = "sha256:35096eeb2e43d85df342c53cc9f3481c9068b7e720aff2ec0534eea5ce3b9e2a"},
+    {file = "dtaidistance-2.5.1-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:f05d3de0b4515b106a79be1eaabf752b7e9e3b2bdf70ba09d7b3e38d329c38fd"},
+    {file = "dtaidistance-2.5.1-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:177efa614e40b83bd1b2a5554dcbeb4976211e86d84a411347cb6218256551d5"},
+    {file = "dtaidistance-2.5.1-cp313-cp313-win_amd64.whl", hash = "sha256:411b966f14a5f3ed773b149f23006ed9e0f37bcf288f4b67f887d917349fba61"},
+    {file = "dtaidistance-2.5.1-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:4ed72751a6068ee5dc245698e75cef01553690ef1735f9465932a1dea4a9734b"},
+    {file = "dtaidistance-2.5.1-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:4c9a983abf55094271ecbb86f5ce0ae1845ff6b1b77a273c3924227fd42009db"},
+    {file = "dtaidistance-2.5.1-cp314-cp314-win_amd64.whl", hash = "sha256:fadb86d38cb8434c83a9d36d45d98c57cf910103c8f0350406df87988a147ee6"},
+    {file = "dtaidistance-2.5.1-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:5c9f1ddec4e3becd6d15f2294706d2c63f868c0b85d10a937e72a41e475e25ba"},
+    {file = "dtaidistance-2.5.1.tar.gz", hash = "sha256:707c7d323bafa4f5e835f15b6e3410fe628e5076506cb67248049e90a18e3a18"},
+]
+
+[package.dependencies]
+numpy = "*"
+
+[package.extras]
+all = ["numpy", "pandas", "scipy"]
+dev = ["Cython", "matplotlib (>=3.0.0)", "numpy", "pandas", "pytest", "pytest-benchmark", "pytest-env", "scipy", "setuptools", "sphinx", "sphinx_rtd_theme", "wheel", "wurlitzer"]
+numpy = ["numpy", "pandas", "scipy"]
+tests = ["pytest", "pytest-benchmark"]
+viz = ["matplotlib (>=3.0.0)"]
+
+[[package]]
 name = "fastapi"
 version = "0.141.1"
 description = "FastAPI framework, high performance, easy to learn, fast to code, ready for production"
@@ -4182,4 +4216,4 @@ type = ["pytest-mypy (>=1.0.1) ; platform_python_implementation != \"PyPy\""]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.14"
-content-hash = "ca6b5a8084450a59836479f3f55d00239cf6dc0661711bc776ba341f6c7f4314"
+content-hash = "083e2dfac5bd11fa4a014ef41b869b6e1d2ad92d06b55b741aa41b9b3be6629a"
