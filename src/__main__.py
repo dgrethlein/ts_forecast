@@ -89,7 +89,20 @@ def ts_cluster(args_dict : Dict):
         args_dict (Dict): A dictionary containing command line arguments parsed by
             an :class:`argparse.ArgumentParser`.
     """
-    dfs, names = load_dataset_df_into_series_dfs()
+    try:
+        dfs, names = load_dataset_df_into_series_dfs()
+
+        if args_dict["verbose"]:
+            print(f"\n// {dbg()}  Running Time Series Clustering Experiment with arguments:")
+            print(args_dict)
+
+            print(f"\n// {dbg()}  First time series sample and sample name:")
+            print(names[0])
+            print(dfs[0])
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't run `ts_cluster` top-level function!\n")
+        traceback.print_exc()
 
 
 def ts_forecast(args_dict : Dict):
@@ -99,7 +112,20 @@ def ts_forecast(args_dict : Dict):
         args_dict (Dict): A dictionary containing command line arguments parsed by
             an :class:`argparse.ArgumentParser`.
     """
-    dfs, names = load_dataset_df_into_series_dfs()
+    try:
+        dfs, names = load_dataset_df_into_series_dfs()
+
+        if args_dict["verbose"]:
+            print(f"\n// {dbg()}  Running Time Series Forecasting Experiment with arguments:")
+            print(args_dict)
+
+            print(f"\n// {dbg()}  First time series sample and sample name:")
+            print(names[0])
+            print(dfs[0])
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't run `ts_forecast` top-level function!\n")
+        traceback.print_exc()
 
 
 def ts_prototype(args_dict : Dict):
@@ -109,7 +135,20 @@ def ts_prototype(args_dict : Dict):
         args_dict (Dict): A dictionary containing command line arguments parsed by
             an :class:`argparse.ArgumentParser`.
     """
-    dfs, names = load_dataset_df_into_series_dfs()
+    try:
+        dfs, names = load_dataset_df_into_series_dfs()
+
+        if args_dict["verbose"]:
+            print(f"\n// {dbg()}  Running Time Series Prototyping Experiment with arguments:")
+            print(args_dict)
+
+            print(f"\n// {dbg()}  First time series sample and sample name:")
+            print(names[0])
+            print(dfs[0])
+
+    except (AttributeError, IndexError, KeyError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't run `ts_prototype` top-level function!\n")
+        traceback.print_exc()
 
 
 #==============================================================================

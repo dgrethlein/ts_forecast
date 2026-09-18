@@ -90,7 +90,7 @@ napoleon_include_special_with_doc = True
 
 # pyan3 settings
 graphviz_output_format = "svg"
-graphviz_dot_options = ["Gnewrank=True"]
+# graphviz_dot_options = ["Gnewrank=True"]
 
 # -- Options for intersphinx extension ---------------------------------------
 
