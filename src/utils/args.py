@@ -19,7 +19,7 @@ Module Contents
 import argparse
 import traceback
 
-from typing import Dict
+from typing import Dict, Tuple
 
 from .misc import dbg, err
 
@@ -27,7 +27,7 @@ from .misc import dbg, err
 #==============================================================================
 #       COMMAND LINE ARGUMENT(s) PARSER FUNCTION(s)
 #==============================================================================
-def get_args_parser() -> argparse.ArgumentParser:
+def get_args_parser() -> Tuple[argparse.ArgumentParser,argparse._SubParsersAction]:
     """Creates and returns a top-level :class:`argparse.ArgumentParser` for
     parsing command line arguments for running experiments via script invokation.
 
@@ -35,30 +35,35 @@ def get_args_parser() -> argparse.ArgumentParser:
         argparse.ArgumentParser: A command line argument parser.
     """
     args_parser = None
+    sub_parse_cmds = None
+
     try:
         args_parser = argparse.ArgumentParser(prog="PROJECT",
                                               description=("Process command line arguments "
                                                            + "for time series forecasting."))
+        sub_parse_cmds = args_parser.add_subparsers(dest="command",
+                                                    required=True,
+                                                    help="Available sub-commands")
 
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't get ArgumentParser!\n")
         traceback.print_exc()
 
-    return args_parser
+    return (args_parser, sub_parse_cmds)
 
 
-def add_ts_cluster_args_parser(parser : argparse.ArgumentParser):
+def add_ts_cluster_args_parser(sub_parsers : argparse._SubParsersAction):
     """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
     several command line arguments when a python script is invoked for the purpose
     of clustering time series values.
 
     Args:
-        parser (argparse.ArgumentParser): A command line argument parser.
+        sub_parsers (argparse._SubParsersAction): Argument parser sub-parser command actions,
+            used for adding command-specific arguments to :class:`argparse.ArgumentParser`.
     """
     try:
         # Command line argument sub-parser for running time series clustering
         # modules directly from the command line.
-        sub_parsers = parser.add_subparsers(dest="command")
         tsclu_parser = sub_parsers.add_parser("cluster",
                                               help="Cluster time series data.",
                                               description=("Pipeline that will "
@@ -76,18 +81,18 @@ def add_ts_cluster_args_parser(parser : argparse.ArgumentParser):
         traceback.print_exc()
 
 
-def add_ts_forecast_args_parser(parser : argparse.ArgumentParser):
+def add_ts_forecast_args_parser(sub_parsers : argparse._SubParsersAction):
     """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
     several command line arguments when a python script is invoked for the purpose
     of forecasting time series values.
 
     Args:
-        parser (argparse.ArgumentParser): A command line argument parser.
+        sub_parsers (argparse._SubParsersAction): Argument parser sub-parser command actions,
+            used for adding command-specific arguments to :class:`argparse.ArgumentParser`.
     """
     try:
         # Command line argument sub-parser for running time series forecasting
         # modules directly from the command line.
-        sub_parsers = parser.add_subparsers(dest="command")
         tsf_parser = sub_parsers.add_parser("forecast",
                                             help="Forecast time series data.",
                                             description=("Pipeline that will "
@@ -417,9 +422,5 @@ def parse_args(parser : argparse.ArgumentParser) -> Dict:
 if __name__ == "__main__":
 
     print(f"\n// {dbg()}  Running File['{__file__}'] as __main__!\n")
-
-    main_parser = get_args_parser()
-    # add_ts_forecast_args_parser(main_parser)
-    pargs = parse_args(main_parser)
 
     print(f"\n// {dbg()}  All done here, nothing to see!\n")
