@@ -119,6 +119,7 @@ def add_cluster_method_arg_to_parser(parser : argparse.ArgumentParser):
     .. note::
         The ``cluster_method`` argument must be chosen from one of the following options:
 
+            * ``CLARA``     - Clustering for Large Applications (CLARA).
             * ``DBSCAN``    - Density-Based Spatial Clustering of Applications with Noise (DBSCAN).
             * ``GMM``       - Gaussian Mixture Model (GMM).
             * ``IDEC``      - Improved Deep Embedding Clustering (IDEC).
@@ -131,7 +132,8 @@ def add_cluster_method_arg_to_parser(parser : argparse.ArgumentParser):
     try:
         parser.add_argument("--cluster_method",
                             default="K_Means",
-                            choices=["DBSCAN",
+                            choices=["CLARA",
+                                     "DBSCAN",
                                      "GMM",
                                      "IDEC",
                                      "K_Medoids",
