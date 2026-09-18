@@ -113,6 +113,32 @@ def add_ts_forecast_args_parser(sub_parsers : argparse._SubParsersAction):
         traceback.print_exc()
 
 
+def add_ts_prototype_args_parser(sub_parsers : argparse._SubParsersAction):
+    """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
+    several command line arguments when a python script is invoked for the purpose
+    of prototyping time series values.
+
+    Args:
+        sub_parsers (argparse._SubParsersAction): Argument parser sub-parser command actions,
+            used for adding command-specific arguments to :class:`argparse.ArgumentParser`.
+    """
+    try:
+        tsp_parser = sub_parsers.add_parser("prototype",
+                                            help="Prototype time series data.",
+                                            description=("Pipeline that will "
+                                                         + "train and test time series "
+                                                         + "prototyping models using "
+                                                         + "electricity consumption data "
+                                                         + "sampled hourly from 2011 to 2014."))
+
+        # Adds command line arguments to anticipate to ArgumentParser.
+        add_verbose_arg_to_parser(parser=tsp_parser)
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add time series prototyping ArgumentParser!\n")
+        traceback.print_exc()
+
+
 #==============================================================================
 #       COMMAND LINE ADD ARGUMENT(s) TO PARSE FUNCTION(s)
 #==============================================================================

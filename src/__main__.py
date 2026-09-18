@@ -23,6 +23,7 @@ from .pre_process import load_dataset_df_into_series_dfs
 
 from .utils.args import add_ts_cluster_args_parser
 from .utils.args import add_ts_forecast_args_parser
+from .utils.args import add_ts_prototype_args_parser
 from .utils.args import get_args_parser
 from .utils.args import parse_args
 
@@ -46,6 +47,7 @@ def get_parsed_args_as_dict() -> Dict:
         main_parser, sub_parsers = get_args_parser()
         add_ts_cluster_args_parser(sub_parsers)
         add_ts_forecast_args_parser(sub_parsers)
+        add_ts_prototype_args_parser(sub_parsers)
         pargs = parse_args(main_parser)
 
     except (AttributeError, TypeError, ValueError):
