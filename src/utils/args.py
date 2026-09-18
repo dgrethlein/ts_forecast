@@ -132,6 +132,8 @@ def add_ts_prototype_args_parser(sub_parsers : argparse._SubParsersAction):
                                                          + "sampled hourly from 2011 to 2014."))
 
         # Adds command line arguments to anticipate to ArgumentParser.
+        add_num_cv_folds_arg_to_parser(parser=tsp_parser)
+        add_ts_dist_func_arg_to_parser(parser=tsp_parser)
         add_verbose_arg_to_parser(parser=tsp_parser)
 
     except (AttributeError, TypeError, ValueError):
@@ -368,10 +370,11 @@ def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
     .. note::
         The ``ts_dist_func`` argument must be chosen from one of the following options:
 
-            * ``Cos`` - Cosine distance (Cos).
-            * ``DTW`` - Dynamic Time Warping (DTW).
-            * ``Euc`` - Euclidean (Euc).
-            * ``SAX`` - Symbolic Aggregate Approxmiation (SAX).
+            * ``Cos``      - Cosine distance (Cos).
+            * ``DTW``      - Dynamic Time Warping (DTW).
+            * ``Euc``      - Euclidean (Euc).
+            * ``SAX``      - Symbolic Aggregate Approxmiation (SAX).
+            * ``Soft_DTW`` - Softmin Dynamic Time Warping (Soft_DTW)
 
     Args:
         parser (argparse.ArgumentParser): A command line argument parser.
@@ -382,7 +385,8 @@ def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
                             choices=["Cos",
                                      "DTW",
                                      "Euc",
-                                     "SAX"],
+                                     "SAX",
+                                     "Soft_DTW"],
                             required=False,
                             help=("Name of the time series distance function to be used "
                                   + "in experiments to numerically compare time series to "

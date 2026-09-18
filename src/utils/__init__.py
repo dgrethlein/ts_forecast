@@ -22,6 +22,7 @@ Package Contents
 from .args import get_args_parser
 from .args import add_ts_cluster_args_parser
 from .args import add_ts_forecast_args_parser
+from .args import add_ts_prototype_args_parser
 
 
 #==============================================================================
