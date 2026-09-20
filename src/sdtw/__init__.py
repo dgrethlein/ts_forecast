@@ -19,4 +19,6 @@ https://github.com/mblondel/soft-dtw/
 
 """
 
+
+from .barycenter import sdtw_barycenter
 from .soft_dtw import SoftDTW
