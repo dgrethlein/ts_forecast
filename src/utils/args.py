@@ -374,7 +374,6 @@ def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
             * ``DTW``      - Dynamic Time Warping (DTW).
             * ``Euc``      - Euclidean (Euc).
             * ``SAX``      - Symbolic Aggregate Approxmiation (SAX).
-            * ``Soft_DTW`` - Softmin Dynamic Time Warping (Soft_DTW)
 
     Args:
         parser (argparse.ArgumentParser): A command line argument parser.
@@ -385,8 +384,7 @@ def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
                             choices=["Cos",
                                      "DTW",
                                      "Euc",
-                                     "SAX",
-                                     "Soft_DTW"],
+                                     "SAX"],
                             required=False,
                             help=("Name of the time series distance function to be used "
                                   + "in experiments to numerically compare time series to "
