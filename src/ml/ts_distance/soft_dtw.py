@@ -22,8 +22,6 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
-from ...sdtw import SoftDTW
-
 from ...utils.misc import dbg, err
 
 
@@ -47,7 +45,6 @@ def compute_soft_dtw(first_obj  : Union[np.ndarray,pd.DataFrame],
     soft_dtw_value = None
 
     try:
-        print(f"soft-dtw")
 
     except (AttributeError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't compute soft-min DTW!\n")
