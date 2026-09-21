@@ -55,7 +55,7 @@ VALUE_COLUMN_NAME = "kwh_electricity_consumed"
 #==============================================================================
 #       LOAD TIME SERIES DATASET FROM (.tsf) FILE FUNCTION(s)
 #==============================================================================
-def load_dataset_df_into_series_dfs(verbose : bool = False) -> Tuple[List[pd.DataFrame],List[str]]:
+def load_dataset_df_into_ts_dfs(verbose : bool = False) -> Tuple[List[pd.DataFrame],List[str]]:
     """Loads the entire time series dataset from a (.tsf) file, stored in
     :const:`DATA_TSF_FILE_PATH` on the local file system, and breaks the resulting
     :class:`pandas.DataFrame` into :const:`NUM_INDIVIDUAL_TS_DFS` (321) individual

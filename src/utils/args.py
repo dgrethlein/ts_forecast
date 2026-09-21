@@ -52,6 +52,33 @@ def get_args_parser() -> Tuple[argparse.ArgumentParser,argparse._SubParsersActio
     return (args_parser, sub_parse_cmds)
 
 
+def add_plot_ts_dfs_args_parser(sub_parsers : argparse._SubParsersAction):
+    """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
+    several command line arguments when a python script is invoked for the purpose
+    of plotting time series values.
+
+    Args:
+        sub_parsers (argparse._SubParsersAction): Argument parser sub-parser command actions,
+            used for adding command-specific arguments to :class:`argparse.ArgumentParser`.
+    """
+    try:
+        tsplot_parser = sub_parsers.add_parser("plot",
+                                               help="Plot time series data.",
+                                               description=("Pipeline that will "
+                                                            + "plot all time series DataFrame(s) "
+                                                            + "onto a single set of Axes using "
+                                                            + "electricity consumption data "
+                                                            + "sampled hourly from 2011 to 2014."))
+
+        # Adds command line arguments to anticipate to ArgumentParser.
+        add_ts_dist_func_arg_to_parser(parser=tsplot_parser)
+        add_verbose_arg_to_parser(parser=tsplot_parser)
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add plot time series DataFrame(s) ArgumentParser!\n")
+        traceback.print_exc()
+
+
 def add_ts_cluster_args_parser(sub_parsers : argparse._SubParsersAction):
     """Adds an :class:`argparse.ArgumentParser` that has been set up to receive
     several command line arguments when a python script is invoked for the purpose
@@ -75,6 +102,7 @@ def add_ts_cluster_args_parser(sub_parsers : argparse._SubParsersAction):
         # Adds command line arguments to anticipate to ArgumentParser.
         add_num_cv_folds_arg_to_parser(parser=tsclu_parser)
         add_random_seed_arg_to_parser(parser=tsclu_parser)
+        add_ts_dist_func_arg_to_parser(parser=tsclu_parser)
         add_verbose_arg_to_parser(parser=tsclu_parser)
 
     except (AttributeError, TypeError, ValueError):

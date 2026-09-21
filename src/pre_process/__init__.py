@@ -27,7 +27,7 @@ from .split_ts_df import VALUE_COLUMN_NAME
 #==============================================================================
 #       LOAD TIME SERIES DATASET FROM (.tsf) FILE FUNCTION(s)
 #==============================================================================
-from .split_ts_df import load_dataset_df_into_series_dfs
+from .split_ts_df import load_dataset_df_into_ts_dfs
 
 
 #==============================================================================
