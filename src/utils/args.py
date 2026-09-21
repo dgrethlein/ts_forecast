@@ -74,6 +74,7 @@ def add_ts_cluster_args_parser(sub_parsers : argparse._SubParsersAction):
 
         # Adds command line arguments to anticipate to ArgumentParser.
         add_num_cv_folds_arg_to_parser(parser=tsclu_parser)
+        add_random_seed_arg_to_parser(parser=tsclu_parser)
         add_verbose_arg_to_parser(parser=tsclu_parser)
 
     except (AttributeError, TypeError, ValueError):
@@ -106,6 +107,7 @@ def add_ts_forecast_args_parser(sub_parsers : argparse._SubParsersAction):
         add_forecast_horizon_arg_to_parser(parser=tsf_parser)
         add_holdout_percentage_arg_to_parser(parser=tsf_parser)
         add_num_cv_folds_arg_to_parser(parser=tsf_parser)
+        add_random_seed_arg_to_parser(parser=tsf_parser)
         add_verbose_arg_to_parser(parser=tsf_parser)
 
     except (AttributeError, TypeError, ValueError):
@@ -133,6 +135,7 @@ def add_ts_prototype_args_parser(sub_parsers : argparse._SubParsersAction):
 
         # Adds command line arguments to anticipate to ArgumentParser.
         add_num_cv_folds_arg_to_parser(parser=tsp_parser)
+        add_random_seed_arg_to_parser(parser=tsp_parser)
         add_ts_dist_func_arg_to_parser(parser=tsp_parser)
         add_verbose_arg_to_parser(parser=tsp_parser)
 
