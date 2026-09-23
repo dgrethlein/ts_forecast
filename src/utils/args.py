@@ -71,7 +71,6 @@ def add_plot_ts_dfs_args_parser(sub_parsers : argparse._SubParsersAction):
                                                             + "sampled hourly from 2011 to 2014."))
 
         # Adds command line arguments to anticipate to ArgumentParser.
-        add_ts_dist_func_arg_to_parser(parser=tsplot_parser)
         add_verbose_arg_to_parser(parser=tsplot_parser)
 
     except (AttributeError, TypeError, ValueError):
@@ -393,6 +392,26 @@ def add_random_seed_arg_to_parser(parser : argparse.ArgumentParser):
         traceback.print_exc()
 
 
+def add_sc_dtw_band_size_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``sc_dtw_band_size`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only finite positive integers,
+    and has a default value of `24`.
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """    
+    try:
+        parser.add_argument("--sc_dtw_band_size",
+                            default=24,
+                            type=int,
+                            required=False,
+                            help=("The width of the Sakoe-Chiba band to be used as "
+                                  + "a DTW warping window for computing time series distance."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add `sc_dtw_band_size` argument to parser.")
+        traceback.print_exc()
+
+
 def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
     """Adds the ``ts_dist_func`` argument to an :class:`argparse.ArgumentParser`.
     This is an optional argument that takes only non-empty strings,
@@ -405,6 +424,7 @@ def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
             * ``DTW``      - Dynamic Time Warping (DTW).
             * ``Euc``      - Euclidean (Euc).
             * ``SAX``      - Symbolic Aggregate Approxmiation (SAX).
+            * ``SC_DTW``   - Sakoe-Chiba Dynamic Time Warping (SC_DTW)
 
     Args:
         parser (argparse.ArgumentParser): A command line argument parser.
@@ -415,7 +435,8 @@ def add_ts_dist_func_arg_to_parser(parser : argparse.ArgumentParser):
                             choices=["Cos",
                                      "DTW",
                                      "Euc",
-                                     "SAX"],
+                                     "SAX",
+                                     "SC_DTW"],
                             required=False,
                             help=("Name of the time series distance function to be used "
                                   + "in experiments to numerically compare time series to "

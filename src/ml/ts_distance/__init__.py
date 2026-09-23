@@ -20,7 +20,7 @@ Package Contents
 #       STANDALONE COMPUTE DTW DISTANCE MEASURE FUNCTION(s)
 #==============================================================================
 from .dtw import compute_dtw
-
+from .dtw import compute_sc_dtw
 
 #==========================================================================
 #       COMPUTE DISTANCE BETWEEN OBJECT(s) METHOD(s)

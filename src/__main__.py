@@ -21,8 +21,7 @@ from typing import Dict
 
 import matplotlib.pyplot as plt
 
-from .plot.plot_ts import plot_ts_dfs_in_2d_pca_space
-
+from .plot.plot_ts import plot_ts_dfs
 from .pre_process import load_dataset_df_into_ts_dfs
 
 from .utils.args import add_plot_ts_dfs_args_parser
@@ -81,7 +80,7 @@ def main():
 
         # Run time series plotting experiments.
         elif main_args["command"] == "plot":
-            plot_ts_dfs(main_args)
+            main_plot_ts_dfs(main_args)
 
         # Run time series prototyping experiments.
         elif main_args["command"] == "prototype":
@@ -95,7 +94,7 @@ def main():
 #==============================================================================
 #       COMMAND-SPECIFIC TOP-LEVEL MAIN PACKAGE FUNCTION(s)
 #==============================================================================
-def plot_ts_dfs(args_dict : Dict):
+def main_plot_ts_dfs(args_dict : Dict):
     """Top-level function for plotting all time series samples.
 
     Args:
@@ -111,9 +110,8 @@ def plot_ts_dfs(args_dict : Dict):
         dfs, _ = load_dataset_df_into_ts_dfs()
 
         # Plots the time series dataset as points in a 2-D PCA space.
-        fig, ax = plot_ts_dfs_in_2d_pca_space(ts_dfs=dfs,
-                                              ts_dist_func=args_dict["ts_dist_func"],
-                                              verbose=args_dict["verbose"])
+        fig, ax = plot_ts_dfs(ts_dfs=dfs,
+                              verbose=args_dict["verbose"])
 
         # Show the plot.
         plt.show()
