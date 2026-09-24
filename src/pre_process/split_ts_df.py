@@ -49,7 +49,7 @@ from ..utils.misc import is_nonneg_finite_int
 #==============================================================================
 DATA_TSF_FILE_PATH = "data/electricity_hourly_dataset.tsf"
 NUM_INDIVIDUAL_TS_DFS = 321
-VALUE_COLUMN_NAME = "kwh_electricity_consumed"
+TS_VALUE_COLUMN_NAME = "kwh_electricity_consumed"
 
 
 #==============================================================================
@@ -79,7 +79,7 @@ def load_dataset_df_into_ts_dfs(verbose : bool = False) -> Tuple[List[pd.DataFra
         data_path = Path(DATA_TSF_FILE_PATH)
         data_df, metadata = load_tsf_to_dataframe(full_file_path_and_name=data_path,
                                                   replace_missing_vals_with="NaN",
-                                                  value_column_name=VALUE_COLUMN_NAME)
+                                                  value_column_name=TS_VALUE_COLUMN_NAME)
         if verbose:
             print(f"\n// {dbg()}  Dataset metadata := {metadata}\n")
 

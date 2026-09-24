@@ -36,6 +36,8 @@ from .args import add_num_clusters_arg_to_parser
 from .args import add_num_cluster_inits_arg_to_parser
 from .args import add_num_cluster_iters_arg_to_parser
 from .args import add_num_cv_folds_arg_to_parser
+from .args import add_plot_method_arg_to_parser
+from .args import add_sc_dtw_band_size_arg_to_parser
 from .args import add_ts_dist_func_arg_to_parser
 from .args import add_random_seed_arg_to_parser
 from .args import add_verbose_arg_to_parser

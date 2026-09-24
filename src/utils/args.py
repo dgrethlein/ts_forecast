@@ -71,6 +71,8 @@ def add_plot_ts_dfs_args_parser(sub_parsers : argparse._SubParsersAction):
                                                             + "sampled hourly from 2011 to 2014."))
 
         # Adds command line arguments to anticipate to ArgumentParser.
+        add_plot_method_arg_to_parser(parser=tsplot_parser)
+        add_random_seed_arg_to_parser(parser=tsplot_parser)
         add_verbose_arg_to_parser(parser=tsplot_parser)
 
     except (AttributeError, TypeError, ValueError):
@@ -371,6 +373,36 @@ def add_num_cv_folds_arg_to_parser(parser : argparse.ArgumentParser):
         traceback.print_exc()
 
 
+def add_plot_method_arg_to_parser(parser : argparse.ArgumentParser):
+    """Adds the ``plot_method`` argument to an :class:`argparse.ArgumentParser`.
+    This is an optional argument that takes only non-empty str,
+    and has a default value of ``PCA``. Plotting method is used to reduce dimensionality
+    of the time series data for plotting projections of the data in 2-D.
+
+    .. note::
+        The ``plot_method`` argument must be chosen from one of the following options:
+
+            * ``PCA``      - Principal Component Analysis (PCA).
+            * ``TSNE``     - t-Distributed Stochastic Neighbor Embedding.
+
+    Args:
+        parser (argparse.ArgumentParser): A command line argument parser.
+    """
+    try:
+        parser.add_argument("--plot_method",
+                            default="PCA",
+                            choices=["PCA",
+                                     "TSNE"],
+                            type=str,
+                            required=False,
+                            help=("The projection method used to reduce the dimensionality "
+                                  + "of the time series data for easy plotting in 2-D."))
+
+    except (AttributeError, TypeError, ValueError):
+        print(f"\n// {err()}  Couldn't add `plot_method` arg to ArgumentParser!\n")
+        traceback.print_exc()
+
+
 def add_random_seed_arg_to_parser(parser : argparse.ArgumentParser):
     """Add the ``random_seed`` argument to an :class:`argparse.ArgumentParser`.
     The is an optional argument that takes only non-negative finite integers,
@@ -398,7 +430,7 @@ def add_sc_dtw_band_size_arg_to_parser(parser : argparse.ArgumentParser):
     and has a default value of `24`.
     Args:
         parser (argparse.ArgumentParser): A command line argument parser.
-    """    
+    """
     try:
         parser.add_argument("--sc_dtw_band_size",
                             default=24,

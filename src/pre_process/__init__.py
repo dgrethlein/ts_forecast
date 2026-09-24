@@ -21,7 +21,7 @@ Package Contents
 #==============================================================================
 from .split_ts_df import DATA_TSF_FILE_PATH
 from .split_ts_df import NUM_INDIVIDUAL_TS_DFS
-from .split_ts_df import VALUE_COLUMN_NAME
+from .split_ts_df import TS_VALUE_COLUMN_NAME
 
 
 #==============================================================================

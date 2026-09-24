@@ -15,3 +15,10 @@ Package Contents
 ================
 
 """
+
+
+#==============================================================================
+#       TIME SERIES PLOTTING FUNCTION(s)
+#==============================================================================
+from .plot_ts import plot_ts_dfs
+from .plot_ts import plot_non_outlier_ts_dfs
