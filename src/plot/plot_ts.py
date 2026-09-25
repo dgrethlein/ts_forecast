@@ -155,7 +155,8 @@ def plot_non_outlier_ts_dfs(ts_dfs           : List[pd.DataFrame],
 
         # Project the distance matrix of non-outliers
         elif plot_method == "TSNE":
-            projections = TSNE(n_components=2, random_state=random_seed).fit_transform(dmatrix)
+            projections = TSNE(n_components=2,
+                               random_state=random_seed).fit_transform(dmatrix)
 
         fig, ax = plt.subplots()
         ax.scatter(projections[:,0],

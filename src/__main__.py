@@ -21,6 +21,8 @@ from typing import Dict
 
 import matplotlib.pyplot as plt
 
+from .ml.cluster.autoencoder import run_autoencoder_ts_clustering
+
 from .plot.plot_ts import plot_ts_dfs
 from .plot.plot_ts import plot_non_outlier_ts_dfs
 from .pre_process import load_dataset_df_into_ts_dfs
@@ -142,9 +144,11 @@ def ts_cluster(args_dict : Dict):
             print(f"\n// {dbg()}  Running Time Series Clustering Experiment with arguments:")
             print(args_dict)
 
-            print(f"\n// {dbg()}  First time series sample and sample name:")
-            print(names[0])
-            print(dfs[0])
+        run_autoencoder_ts_clustering(ts_dfs=dfs,
+                                      batch_size=32,
+                                      embedding_dim=16,
+                                      random_seed=args_dict["random_seed"],
+                                      verbose=args_dict["verbose"])
 
     except (AttributeError, IndexError, KeyError, TypeError, ValueError):
         print(f"\n// {err()}  Couldn't run `ts_cluster` top-level function!\n")

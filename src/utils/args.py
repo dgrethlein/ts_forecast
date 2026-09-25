@@ -14,6 +14,7 @@ Module Contents
 ===============
 
 """
+# pylint: disable=protected-access
 
 
 import argparse

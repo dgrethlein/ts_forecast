@@ -6,7 +6,7 @@
 Package Description
 ===================
 
-Package for importing code from all 
+Package for importing code from all
 :mod:`Machine Learning Time Series Distance<src.ml.ts_distance>` modules.
 
 .. moduleauthor:: David Grethlein

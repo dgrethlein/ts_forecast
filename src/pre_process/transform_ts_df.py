@@ -9,7 +9,7 @@ Module Description
 
 Module for transforming :class:`pandas DataFrame(s)<pandas.DataFrame>` containing time
 series data recorded by individual time series samples, for stationarity, skew, and other
-statistical tests used in pre-processing time series data to be fed into a time series 
+statistical tests used in pre-processing time series data to be fed into a time series
 forecasting model.
 
 .. moduleauthor:: David Grethlein
