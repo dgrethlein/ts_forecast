@@ -117,6 +117,7 @@ def main_plot_ts_dfs(args_dict : Dict):
         _ = plot_non_outlier_ts_dfs(ts_dfs=dfs,
                                     plot_method="TSNE",
                                     random_seed=args_dict["random_seed"],
+                                    ts_dist_func=args_dict["ts_dist_func"],
                                     verbose=args_dict["verbose"])
 
         # Show the plot.

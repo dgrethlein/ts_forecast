@@ -73,6 +73,7 @@ def add_plot_ts_dfs_args_parser(sub_parsers : argparse._SubParsersAction):
         # Adds command line arguments to anticipate to ArgumentParser.
         add_plot_method_arg_to_parser(parser=tsplot_parser)
         add_random_seed_arg_to_parser(parser=tsplot_parser)
+        add_ts_dist_func_arg_to_parser(parser=tsplot_parser)
         add_verbose_arg_to_parser(parser=tsplot_parser)
 
     except (AttributeError, TypeError, ValueError):

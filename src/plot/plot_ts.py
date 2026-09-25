@@ -81,6 +81,7 @@ def plot_non_outlier_ts_dfs(ts_dfs           : List[pd.DataFrame],
         ts_dfs (List[pd.DataFrame]): _description_
         plot_method (str, optional): _description_. Defaults to "PCA".
         random_seed (int, optional): _description_. Defaults to 0.
+        sc_dtw_band_size (int, optional): _description_. Defaults to 24.
         ts_dist_func (str, optional): _description_. Defaults to "Euc".
         verbose (bool, optional): _description_. Defaults to False.
 
@@ -115,7 +116,7 @@ def plot_non_outlier_ts_dfs(ts_dfs           : List[pd.DataFrame],
         if verbose:
             print(f"\n// {dbg()}  {len(non_outliers)} non-outlier time series samples preserved!")
             print(f"\n// {dbg()}  Attempting to compute {len(non_outliers)}x{len(non_outliers)} "
-                  + f"Euclidean distance matrix for plotting['{plot_method}']' "
+                  + f"Euclidean distance matrix for plotting['{plot_method}'] "
                   + f"of {len(non_outliers)} time series samples!")
 
         # Computes a distance matrix relating how alike all time series samples are to one another.
@@ -129,9 +130,18 @@ def plot_non_outlier_ts_dfs(ts_dfs           : List[pd.DataFrame],
         dmatrix = np.zeros((len(non_outliers), len(non_outliers)))
         for row_idx, _ in enumerate(non_outliers):
             for col_idx in range(row_idx + 1, len(non_outliers)):
-                dmatrix[row_idx][col_idx] = dfunc(first_obj=non_outliers[row_idx],
-                                                  second_obj=non_outliers[col_idx])
+                if ts_dist_func == "SC_DTW":
+                    dmatrix[row_idx][col_idx] = dfunc(first_obj=non_outliers[row_idx],
+                                                      second_obj=non_outliers[col_idx],
+                                                      sc_band_size=sc_dtw_band_size)
+                else:
+                    dmatrix[row_idx][col_idx] = dfunc(first_obj=non_outliers[row_idx],
+                                                      second_obj=non_outliers[col_idx])
+
                 dmatrix[col_idx][row_idx] = dmatrix[row_idx][col_idx]
+
+            if verbose:
+                print(f"// {dbg()}  Completed computation of row[{row_idx}] of distance matrix!")
 
         projector = None
         projections = None
@@ -145,9 +155,7 @@ def plot_non_outlier_ts_dfs(ts_dfs           : List[pd.DataFrame],
 
         # Project the distance matrix of non-outliers
         elif plot_method == "TSNE":
-            projector = TSNE(n_components=2, random_state=random_seed)
-            projector.fit(dmatrix)
-            projections = projector.transform(dmatrix)
+            projections = TSNE(n_components=2, random_state=random_seed).fit_transform(dmatrix)
 
         fig, ax = plt.subplots()
         ax.scatter(projections[:,0],
